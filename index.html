@@ -3,73 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e1a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Escape Velocity">
+<meta name="description" content="A space doodle jumper. 10 levels. NASA backdrops. Trust Nobody.">
+<link rel="manifest" id="manifestLink">
 <title>ESCAPE VELOCITY</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#0b0e1a;
-    --paper:#eef1ff;
-    --amber:#ffb340;
-    --cyan:#5ce8ff;
-    --danger:#ff5c7a;
-    --display:'Chakra Petch','Space Mono',monospace;
-    --mono:'Space Mono',monospace;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;overflow:hidden;background:var(--ink);font-family:var(--mono);color:var(--paper);
-    touch-action:manipulation;user-select:none;-webkit-user-select:none}
-  #stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-  canvas{display:block;background:#05070f}
+:root{
+  --ink:#0b0e1a;--paper:#eef1ff;--amber:#ffb340;--cyan:#5ce8ff;
+  --danger:#ff5c7a;--gold:#ffd700;--purple:#c9a8ff;
+  --display:'Chakra Petch','Space Mono',monospace;--mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--ink);font-family:var(--mono);
+  color:var(--paper);touch-action:manipulation;user-select:none;-webkit-user-select:none}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+canvas{display:block;background:#05070f}
 
-  /* ---------- overlays ---------- */
-  .overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:14px;padding:24px;text-align:center;background:rgba(5,7,15,.82);backdrop-filter:blur(6px);z-index:10}
-  .overlay.hidden{display:none}
-  .eyebrow{font-size:11px;letter-spacing:.35em;color:var(--cyan);text-transform:uppercase}
-  h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,9vw,56px);letter-spacing:.06em;line-height:1.05}
-  h1 .alt{color:var(--amber)}
-  h2{font-family:var(--display);font-size:clamp(24px,6vw,36px);letter-spacing:.08em}
-  .sub{font-size:13px;opacity:.75;max-width:300px;line-height:1.55}
-  .btn{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.12em;text-transform:uppercase;
-    background:var(--paper);color:var(--ink);border:none;padding:15px 34px;min-width:230px;cursor:pointer;
-    border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 6px 0 rgba(0,0,0,.55);transition:transform .06s}
-  .btn:active{transform:translateY(4px);box-shadow:0 0 0 1px rgba(255,255,255,.15),0 2px 0 rgba(0,0,0,.55)}
-  .btn.ghost{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 2px rgba(238,241,255,.4)}
-  .btn.accent{background:var(--amber)}
-  .stat{font-size:13px;letter-spacing:.15em;text-transform:uppercase;opacity:.85}
-  .stat b{color:var(--amber);font-size:18px}
+.overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;padding:24px;text-align:center;
+  background:rgba(5,7,15,.88);backdrop-filter:blur(8px);z-index:10}
+.overlay.hidden{display:none}
+.eyebrow{font-size:11px;letter-spacing:.35em;color:var(--cyan);text-transform:uppercase}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,9vw,56px);letter-spacing:.06em;line-height:1.05}
+h1 .alt{color:var(--amber)}
+h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08em}
+.sub{font-size:13px;opacity:.75;max-width:300px;line-height:1.55}
+.btn{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:.12em;
+  text-transform:uppercase;background:var(--paper);color:var(--ink);border:none;
+  padding:15px 34px;min-width:230px;cursor:pointer;border-radius:3px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.15),0 6px 0 rgba(0,0,0,.55);transition:transform .06s}
+.btn:active{transform:translateY(4px);box-shadow:0 0 0 1px rgba(255,255,255,.15),0 2px 0 rgba(0,0,0,.55)}
+.btn.ghost{background:transparent;color:var(--paper);box-shadow:inset 0 0 0 2px rgba(238,241,255,.4)}
+.btn.accent{background:var(--amber)}
+.btn.gold{background:var(--gold);color:#2a1f00}
+.stat{font-size:13px;letter-spacing:.15em;text-transform:uppercase;opacity:.85}
+.stat b{color:var(--amber);font-size:18px}
+.setting{display:flex;align-items:center;justify-content:space-between;width:min(320px,86vw);
+  padding:14px 0;border-bottom:1px solid rgba(238,241,255,.14)}
+.setting span{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.seg{display:flex;border:2px solid rgba(238,241,255,.35);border-radius:3px;overflow:hidden}
+.seg button{font-family:var(--display);font-size:12px;letter-spacing:.1em;padding:9px 16px;
+  border:none;background:transparent;color:var(--paper);cursor:pointer;text-transform:uppercase}
+.seg button.on{background:var(--cyan);color:var(--ink);font-weight:700}
+.note{font-size:11px;opacity:.55;max-width:300px;line-height:1.6}
+.card{border:1px solid rgba(92,232,255,.35);background:rgba(11,14,26,.65);
+  padding:22px 26px;max-width:320px;width:100%}
+.card .apod-title{color:var(--cyan);font-size:12px;letter-spacing:.08em;margin-top:8px;line-height:1.5}
+.mechanic-tag{display:inline-block;background:rgba(92,232,255,.15);border:1px solid var(--cyan);
+  color:var(--cyan);font-size:10px;letter-spacing:.2em;padding:3px 10px;border-radius:2px;margin-top:8px}
 
-  /* settings rows */
-  .setting{display:flex;align-items:center;justify-content:space-between;width:min(320px,86vw);
-    padding:14px 0;border-bottom:1px solid rgba(238,241,255,.14)}
-  .setting span{font-size:13px;letter-spacing:.1em;text-transform:uppercase}
-  .seg{display:flex;border:2px solid rgba(238,241,255,.35);border-radius:3px;overflow:hidden}
-  .seg button{font-family:var(--display);font-size:12px;letter-spacing:.1em;padding:9px 16px;border:none;
-    background:transparent;color:var(--paper);cursor:pointer;text-transform:uppercase}
-  .seg button.on{background:var(--cyan);color:var(--ink);font-weight:700}
-  .note{font-size:11px;opacity:.55;max-width:300px;line-height:1.6}
+/* HUD */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}
+#hud.show{display:block}
+#hudTop{position:absolute;top:max(10px,env(safe-area-inset-top));left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;padding:8px 14px}
+#lvlTag{font-family:var(--display);font-size:13px;letter-spacing:.18em;color:var(--amber)}
+#altTag{font-size:12px;letter-spacing:.1em}
+#pauseBtn{pointer-events:auto;width:42px;height:42px;border-radius:3px;
+  border:2px solid rgba(238,241,255,.45);background:rgba(5,7,15,.55);
+  color:var(--paper);font-size:15px;cursor:pointer;font-family:var(--display)}
+#progressWrap{position:absolute;top:max(64px,calc(env(safe-area-inset-top) + 54px));
+  left:14px;right:14px;height:4px;background:rgba(238,241,255,.15);border-radius:2px}
+#progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--amber));
+  border-radius:2px;transition:width .25s}
+#credit{position:absolute;bottom:max(8px,env(safe-area-inset-bottom));left:0;right:0;
+  text-align:center;font-size:9px;letter-spacing:.08em;opacity:.45;cursor:pointer;pointer-events:auto}
+#tapHint{position:absolute;bottom:18%;left:0;right:0;display:flex;justify-content:space-between;
+  padding:0 10vw;font-size:11px;letter-spacing:.2em;opacity:.5;text-transform:uppercase}
 
-  /* level intro card */
-  .card{border:1px solid rgba(92,232,255,.35);background:rgba(11,14,26,.65);padding:22px 26px;max-width:320px}
-  .card .apod-title{color:var(--cyan);font-size:12px;letter-spacing:.08em;margin-top:8px;line-height:1.5}
+/* Toast */
+#toast{position:fixed;bottom:22%;left:50%;transform:translateX(-50%);
+  font-family:var(--display);font-size:13px;letter-spacing:.12em;color:var(--ink);
+  background:var(--amber);padding:10px 22px;border-radius:3px;z-index:99;
+  opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;text-align:center}
+#toast.show{opacity:1}
 
-  /* HUD */
-  #hud{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}
-  #hud.show{display:block}
-  #hudTop{position:absolute;top:max(10px,env(safe-area-inset-top));left:0;right:0;display:flex;
-    align-items:center;justify-content:space-between;padding:8px 14px}
-  #lvlTag{font-family:var(--display);font-size:13px;letter-spacing:.18em;color:var(--amber)}
-  #altTag{font-size:12px;letter-spacing:.1em}
-  #pauseBtn{pointer-events:auto;width:42px;height:42px;border-radius:3px;border:2px solid rgba(238,241,255,.45);
-    background:rgba(5,7,15,.55);color:var(--paper);font-size:15px;cursor:pointer;font-family:var(--display)}
-  #progressWrap{position:absolute;top:max(64px,calc(env(safe-area-inset-top) + 54px));left:14px;right:14px;height:4px;
-    background:rgba(238,241,255,.15);border-radius:2px}
-  #progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--amber));border-radius:2px;transition:width .25s}
-  #credit{position:absolute;bottom:max(8px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;
-    font-size:9px;letter-spacing:.08em;opacity:.45}
-  #tapHint{position:absolute;bottom:18%;left:0;right:0;display:flex;justify-content:space-between;
-    padding:0 10vw;font-size:11px;letter-spacing:.2em;opacity:.5;text-transform:uppercase}
+/* APOD modal */
+#apodModal{position:fixed;inset:0;background:rgba(5,7,15,.92);backdrop-filter:blur(10px);
+  z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;gap:14px}
+#apodModal.hidden{display:none}
+#apodModal img{max-width:min(400px,90vw);max-height:42vh;object-fit:cover;border:1px solid rgba(92,232,255,.4)}
+#apodModal .apod-body{font-size:12px;line-height:1.7;max-width:360px;opacity:.8;
+  max-height:22vh;overflow-y:auto;text-align:left}
+#apodModal h3{font-family:var(--display);font-size:18px;letter-spacing:.1em;color:var(--cyan)}
+
+/* install banner */
+#installBanner{position:fixed;bottom:0;left:0;right:0;padding:14px 20px;
+  background:rgba(11,14,26,.96);border-top:1px solid rgba(92,232,255,.3);
+  display:flex;align-items:center;justify-content:space-between;z-index:20;
+  font-size:13px;gap:14px}
+#installBanner.hidden{display:none}
+#installBanner button{font-family:var(--display);font-size:12px;letter-spacing:.1em;
+  padding:9px 18px;border-radius:3px;border:none;cursor:pointer;white-space:nowrap}
+#installYes{background:var(--amber);color:var(--ink)}
+#installNo{background:transparent;color:var(--paper);opacity:.6}
+
+/* golden skin shimmer */
+@keyframes goldShimmer{0%,100%{filter:hue-rotate(0deg) brightness(1.1)}
+  50%{filter:hue-rotate(15deg) brightness(1.4)}}
+.golden canvas{animation:goldShimmer 1.4s infinite}
 </style>
 </head>
 <body>
@@ -79,22 +118,23 @@
 <!-- HUD -->
 <div id="hud">
   <div id="hudTop">
-    <div>
-      <div id="lvlTag">LV 1</div>
-      <div id="altTag">0 m</div>
-    </div>
+    <div><div id="lvlTag">LV 1</div><div id="altTag">0 m</div></div>
     <button id="pauseBtn" aria-label="Pause">| |</button>
   </div>
   <div id="progressWrap"><div id="progressBar"></div></div>
-  <div id="tapHint"><span id="hintL">&#9664; tap</span><span>&#9650; tap top to shoot</span><span id="hintR">tap &#9654;</span></div>
+  <div id="tapHint">
+    <span id="hintL">&#9664; tap</span>
+    <span>&#9650; shoot</span>
+    <span id="hintR">tap &#9654;</span>
+  </div>
   <div id="credit"></div>
 </div>
 
 <!-- MAIN MENU -->
 <div class="overlay" id="menuScreen">
   <div class="eyebrow">Nobody Studios presents</div>
-  <h1>ESCAPE<br><span class="alt">VELOCITY</span></h1>
-  <p class="sub">Five climbs from low orbit to deep space. Shoot the debris, dodge what you can't, and reach the checkpoint station at the top of each level.</p>
+  <h1 id="mainTitle">ESCAPE<br><span class="alt">VELOCITY</span></h1>
+  <p class="sub">Ten climbs from low orbit to the edge of everything. Shoot debris, dodge what you can't, reach each checkpoint.</p>
   <button class="btn accent" id="startBtn">Start Game</button>
   <button class="btn ghost" id="settingsBtn">Settings</button>
   <p class="note" id="nasaStatus">Contacting NASA archive&hellip;</p>
@@ -117,15 +157,17 @@
       <button data-on="0">Off</button>
     </div>
   </div>
-  <p class="note">Tap: hold the left or right half of the screen to steer. Tilt: lean your phone. iOS will ask for motion permission once. Either mode: tap the top third of the screen to shoot.</p>
+  <p class="note">Tap: hold left/right to steer, tap top third to shoot. Tilt: lean phone to steer, tap anywhere top to shoot. Either mode works with Arrow keys + Space on desktop.</p>
+  <div id="goldenStatus" class="note" style="color:var(--gold);display:none">✦ Golden Astronaut Unlocked — reach 10,000 m lifetime to keep it</div>
   <button class="btn" id="settingsBack">Back</button>
 </div>
 
 <!-- LEVEL INTRO -->
 <div class="overlay hidden" id="introScreen">
   <div class="card">
-    <div class="eyebrow" id="introEyebrow">Level 1 of 5</div>
+    <div class="eyebrow" id="introEyebrow">Level 1 of 10</div>
     <h2 id="introName">LOW EARTH ORBIT</h2>
+    <div class="mechanic-tag" id="introMechanic"></div>
     <div class="apod-title" id="introApod"></div>
   </div>
   <button class="btn accent" id="introGo">Launch</button>
@@ -141,9 +183,10 @@
 
 <!-- FAIL -->
 <div class="overlay hidden" id="failScreen">
-  <div class="eyebrow">Signal lost</div>
-  <h2>RE-ENTRY</h2>
+  <div class="eyebrow" id="failEyebrow">Signal lost</div>
+  <h2 id="failTitle">RE-ENTRY</h2>
   <div class="stat" id="failStat"></div>
+  <p class="note" id="failQuote" style="opacity:.7;font-style:italic"></p>
   <button class="btn accent" id="retryBtn">Retry</button>
   <button class="btn ghost" id="failMenuBtn">Main Menu</button>
 </div>
@@ -159,567 +202,1011 @@
 
 <!-- GAME COMPLETE -->
 <div class="overlay hidden" id="winScreen">
-  <div class="eyebrow">Deep space achieved</div>
+  <div class="eyebrow">You made it</div>
   <h2>ESCAPE<br>VELOCITY</h2>
-  <p class="sub">All five checkpoints cleared. The solar system is behind you. Nobody saw it. Trust Nobody.</p>
+  <p class="sub">Ten checkpoints cleared. The universe is behind you. Nobody saw it. Trust Nobody.</p>
   <div class="stat" id="winStat"></div>
   <button class="btn accent" id="againBtn">Play Again</button>
   <button class="btn ghost" id="winMenuBtn">Main Menu</button>
 </div>
 
+<!-- SECRET SUN LEVEL RESULT -->
+<div class="overlay hidden" id="sunScreen">
+  <div class="eyebrow" style="color:#ff5c7a">⚠ SOLAR PROXIMITY ALERT</div>
+  <h2 style="color:#ffb340">TOO CLOSE<br>TO THE SUN</h2>
+  <p class="sub" style="color:#ff9a3c">Hubris: 100%<br>Sunscreen: 0%<br>Survival: lol no</p>
+  <div class="stat"><b style="font-size:30px">☀️</b></div>
+  <button class="btn accent" id="sunBackBtn">Back to Safety</button>
+</div>
+
+<!-- APOD MODAL -->
+<div id="apodModal" class="hidden">
+  <img id="apodImg" src="" alt="">
+  <h3 id="apodModalTitle"></h3>
+  <p class="apod-body" id="apodModalBody"></p>
+  <button class="btn ghost" id="apodClose">Close</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- INSTALL BANNER -->
+<div id="installBanner" class="hidden">
+  <span style="font-size:12px;letter-spacing:.06em">Add to Home Screen for offline play</span>
+  <div style="display:flex;gap:8px">
+    <button id="installYes">Install</button>
+    <button id="installNo">Not now</button>
+  </div>
+</div>
+
 <script>
-/* =========================================================
-   ESCAPE VELOCITY — space doodle jumper / Nobody Studios
-   Single file. No build step. Deploy anywhere.
-   ========================================================= */
+/* =============================================================
+   ESCAPE VELOCITY v3 — Nobody Studios
+   10 levels · PWA · NASA APOD · Easter eggs
+   Single file, no build step.
+   ============================================================= */
 
-/* ---------- canvas + scaling ---------- */
-const W = 400, H = 700;                 // logical game space
-const cvs = document.getElementById('game');
-const ctx = cvs.getContext('2d');
-let viewScale = 1;
-function fit(){
-  const vw = window.innerWidth, vh = window.innerHeight;
-  viewScale = Math.min(vw / W, vh / H);
-  cvs.width  = Math.floor(W * viewScale * devicePixelRatio);
-  cvs.height = Math.floor(H * viewScale * devicePixelRatio);
-  cvs.style.width  = (W * viewScale) + 'px';
-  cvs.style.height = (H * viewScale) + 'px';
-  ctx.setTransform(viewScale * devicePixelRatio, 0, 0, viewScale * devicePixelRatio, 0, 0);
+/* ── Inline Service Worker via Blob ── */
+const SW_SRC = `
+const CACHE='ev-v3';
+const PRECACHE=['/'];
+self.addEventListener('install',e=>{
+  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));
+});
+self.addEventListener('activate',e=>{
+  e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch',e=>{
+  if(e.request.method!=='GET')return;
+  e.respondWith(caches.match(e.request).then(cached=>{
+    const net=fetch(e.request).then(r=>{
+      if(r&&r.status===200){
+        const clone=r.clone();
+        caches.open(CACHE).then(c=>c.put(e.request,clone));
+      }
+      return r;
+    }).catch(()=>null);
+    return cached||net;
+  }));
+});
+`;
+
+/* Inline manifest */
+const MANIFEST = {
+  name:'Escape Velocity',short_name:'EscapeV',
+  description:'Space doodle jumper. 10 levels. NASA backdrops. Trust Nobody.',
+  start_url:'.',display:'standalone',
+  background_color:'#0b0e1a',theme_color:'#0b0e1a',
+  icons:[
+    {src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="%230b0e1a"/><text y="380" font-size="380" text-anchor="middle" x="256">🚀</text></svg>',sizes:'512x512',type:'image/svg+xml'}
+  ]
+};
+const mBlob=new Blob([JSON.stringify(MANIFEST)],{type:'application/manifest+json'});
+document.getElementById('manifestLink').href=URL.createObjectURL(mBlob);
+
+if('serviceWorker' in navigator){
+  const swBlob=new Blob([SW_SRC],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob),{scope:'./'}).catch(()=>{});
 }
-addEventListener('resize', fit); fit();
 
-/* ---------- level definitions ---------- */
-const LEVELS = [
-  {name:'LOW EARTH ORBIT', goal:2600, gap:[58,88],  moving:0.00, brittle:0.05, spring:0.07, tint:'#1b2a52', star:'#9fc4ff', hazard:0.05, hazType:'satellite', bh:0},
-  {name:'LUNAR PASSAGE',   goal:3200, gap:[66,96],  moving:0.10, brittle:0.10, spring:0.07, tint:'#2a2a38', star:'#d8d8e8', hazard:0.08, hazType:'satellite', bh:0},
-  {name:'MARS CORRIDOR',   goal:3800, gap:[72,102], moving:0.18, brittle:0.14, spring:0.06, tint:'#3a1f22', star:'#ffb29a', hazard:0.10, hazType:'asteroid',  bh:0},
-  {name:'JOVIAN STORM',    goal:4400, gap:[78,108], moving:0.25, brittle:0.18, spring:0.06, tint:'#33240f', star:'#ffd9a0', hazard:0.14, hazType:'asteroid',  bh:0},
-  {name:'DEEP SPACE',      goal:5200, gap:[84,114], moving:0.30, brittle:0.24, spring:0.05, tint:'#120b26', star:'#c9a8ff', hazard:0.10, hazType:'asteroid',  bh:0.05}
+/* ── Canvas ── */
+const W=400,H=700;
+const cvs=document.getElementById('game');
+const ctx=cvs.getContext('2d');
+let viewScale=1;
+function fit(){
+  const vw=window.innerWidth,vh=window.innerHeight;
+  viewScale=Math.min(vw/W,vh/H);
+  cvs.width=Math.floor(W*viewScale*devicePixelRatio);
+  cvs.height=Math.floor(H*viewScale*devicePixelRatio);
+  cvs.style.width=(W*viewScale)+'px';
+  cvs.style.height=(H*viewScale)+'px';
+  ctx.setTransform(viewScale*devicePixelRatio,0,0,viewScale*devicePixelRatio,0,0);
+}
+addEventListener('resize',fit);fit();
+
+/* ── 10 Level definitions ──
+   mechanic: 'normal'|'heavy-grav'|'ghost'|'low-grav'|'wormhole'|'ring-bands'|'mirror'|'speed'|'chaos'|'event-horizon'
+*/
+const LEVELS=[
+  {name:'LOW EARTH ORBIT',   mechanic:'normal',       goal:2600,gap:[58,88], moving:0.00,brittle:0.05,spring:0.07,tint:'#1b2a52',star:'#9fc4ff',hazard:0.05,hazType:'satellite',bh:0,
+   desc:'Standard orbit. Satellites orbit too — watch for debris.'},
+  {name:'LUNAR PASSAGE',     mechanic:'normal',       goal:3200,gap:[66,96], moving:0.10,brittle:0.10,spring:0.07,tint:'#2a2a38',star:'#d8d8e8',hazard:0.08,hazType:'satellite',bh:0,
+   desc:'Earth recedes. Moving platforms and satellite density increases.'},
+  {name:'MARS CORRIDOR',     mechanic:'normal',       goal:3800,gap:[72,102],moving:0.18,brittle:0.14,spring:0.06,tint:'#3a1f22',star:'#ffb29a',hazard:0.10,hazType:'asteroid', bh:0,
+   desc:'Red dust. Asteroids replace satellites. More brittle ice platforms.'},
+  {name:'SATURN\'S RINGS',   mechanic:'ring-bands',   goal:4200,gap:[74,98], moving:0.20,brittle:0.12,spring:0.07,tint:'#2a2218',star:'#ffd9a0',hazard:0.08,hazType:'asteroid', bh:0,
+   desc:'Horizontal ice-ring bands scroll across the screen. Time your crossings.'},
+  {name:'TITAN\'S DESCENT',  mechanic:'heavy-grav',   goal:4600,gap:[62,88], moving:0.22,brittle:0.16,spring:0.10,tint:'#2e1a00',star:'#ffb060',hazard:0.12,hazType:'asteroid', bh:0,
+   desc:'Titan\'s thick atmosphere. Gravity is 40% heavier. Springs help.'},
+  {name:'JOVIAN STORM',      mechanic:'normal',       goal:5000,gap:[78,108],moving:0.25,brittle:0.18,spring:0.06,tint:'#33240f',star:'#ffd9a0',hazard:0.14,hazType:'asteroid', bh:0,
+   desc:'Storm bands and dense asteroid fields. Fast moving platforms.'},
+  {name:'VOYAGER GRAVEYARD', mechanic:'ghost',        goal:5400,gap:[80,110],moving:0.22,brittle:0.20,spring:0.07,tint:'#1a1a2e',star:'#a8c8ff',hazard:0.10,hazType:'satellite',bh:0.02,
+   desc:'Ghost platforms fade in and out. Land fast — they won\'t wait.'},
+  {name:'INTERSTELLAR VOID', mechanic:'low-grav',     goal:5800,gap:[90,130],moving:0.15,brittle:0.22,spring:0.05,tint:'#120b26',star:'#c9a8ff',hazard:0.08,hazType:'asteroid', bh:0.03,
+   desc:'Near-zero gravity. Floaty physics. Wormhole pads teleport you upward.'},
+  {name:'DARK MATTER REEF',  mechanic:'wormhole',     goal:6200,gap:[85,115],moving:0.28,brittle:0.20,spring:0.08,tint:'#0a0a1f',star:'#8888ff',hazard:0.12,hazType:'asteroid', bh:0.04,
+   desc:'Wormholes scatter across the reef. Jump in — you won\'t know where you\'ll land.'},
+  {name:'EVENT HORIZON',     mechanic:'event-horizon',goal:7000,gap:[86,116],moving:0.30,brittle:0.24,spring:0.05,tint:'#05020f',star:'#c9a8ff',hazard:0.10,hazType:'asteroid', bh:0.08,
+   desc:'Everything bends. Black holes everywhere. This is the end of the map.'},
 ];
 
-/* ---------- NASA APOD integration ----------
-   Each level gets a real Astronomy Picture of the Day as its
-   backdrop, credited in the HUD. Falls back silently to the
-   procedural starfield if the API is unreachable. */
-const NASA_KEY = 'DEMO_KEY'; // swap for your own key at api.nasa.gov for higher rate limits
-const apod = { images: [null,null,null,null,null], meta: [null,null,null,null,null], ready:false };
+const MECHANIC_LABELS={
+  'normal':'Standard',
+  'heavy-grav':'⬇ Heavy Gravity',
+  'ghost':'👻 Ghost Platforms',
+  'low-grav':'⬆ Low Gravity',
+  'ring-bands':'💫 Ring Bands',
+  'wormhole':'🌀 Wormhole Pads',
+  'event-horizon':'⚫ Event Horizon',
+};
+
+/* ── NASA APOD ── */
+const NASA_KEY='DEMO_KEY';
+const apod={images:[],meta:[],ready:false};
 
 async function loadAPOD(){
-  const status = document.getElementById('nasaStatus');
+  const status=document.getElementById('nasaStatus');
   try{
-    const res = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}&count=8&thumbs=true`);
-    if(!res.ok) throw new Error(res.status);
-    const data = await res.json();
-    const pics = data.filter(d => d.media_type === 'image' || d.thumbnail_url).slice(0,5);
-    let loaded = 0;
+    const res=await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}&count=12&thumbs=true`);
+    if(!res.ok)throw new Error(res.status);
+    const data=await res.json();
+    const pics=data.filter(d=>d.media_type==='image'||d.thumbnail_url).slice(0,10);
+    let loaded=0;
     pics.forEach((p,i)=>{
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = ()=>{ apod.images[i]=img; apod.meta[i]=p; loaded++; if(loaded===1) apod.ready=true;
-        status.textContent = `Backdrops: NASA Astronomy Picture of the Day (${loaded} loaded)`; };
-      img.src = p.url && !p.url.includes('youtube') ? p.url : p.thumbnail_url;
+      apod.meta[i]=p;
+      const img=new Image();
+      img.crossOrigin='anonymous';
+      img.onload=()=>{apod.images[i]=img;loaded++;if(loaded===1){apod.ready=true;}
+        status.textContent=`NASA APOD backdrops loaded (${loaded}/${pics.length})`;};
+      img.onerror=()=>{loaded++;};
+      img.src=p.url&&!p.url.includes('youtube')?p.url:p.thumbnail_url;
     });
-    if(pics.length===0) throw new Error('no images');
   }catch(e){
-    status.textContent = 'NASA archive offline — running procedural starfield.';
+    status.textContent='NASA offline — procedural starfield active.';
   }
 }
 loadAPOD();
 
-/* ---------- settings ---------- */
-const settings = { controls:'tap', sound:true };
+/* ── Persistence ── */
+const save={
+  get lifetimeAlt(){return parseInt(localStorage.getItem('ev_lifetime')||'0')},
+  set lifetimeAlt(v){localStorage.setItem('ev_lifetime',v)},
+  get golden(){return localStorage.getItem('ev_golden')==='1'},
+  set golden(v){localStorage.setItem('ev_golden',v?'1':'0')},
+  get deathsOnLevel(){return JSON.parse(localStorage.getItem('ev_deaths')||'{}')},
+  setDeaths(l,n){const d=this.deathsOnLevel;d[l]=n;localStorage.setItem('ev_deaths',JSON.stringify(d))},
+  getDeaths(l){return this.deathsOnLevel[l]||0},
+  clearDeaths(l){const d=this.deathsOnLevel;delete d[l];localStorage.setItem('ev_deaths',JSON.stringify(d))},
+};
 
-/* ---------- tiny synth (no assets) ---------- */
-let AC = null;
-function beep(freq, dur=0.07, type='square', vol=0.04){
-  if(!settings.sound) return;
+/* ── Easter egg state ── */
+const eggs={
+  buzzActive:false,         // purple laser mode
+  buzzSeq:[],               // keyboard sequence B U Z Z
+  titleTaps:0,              // tap title 5x
+  titleTapTimer:null,
+  stayShown:false,
+  vulcanShown:false,
+};
+
+/* ── Settings ── */
+const settings={controls:'tap',sound:true};
+
+/* ── Sound ── */
+let AC=null;
+function beep(freq,dur=0.07,type='square',vol=0.04){
+  if(!settings.sound)return;
   try{
-    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
-    const o = AC.createOscillator(), g = AC.createGain();
-    o.type = type; o.frequency.value = freq;
-    g.gain.setValueAtTime(vol, AC.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + dur);
-    o.connect(g); g.connect(AC.destination);
-    o.start(); o.stop(AC.currentTime + dur);
+    AC=AC||(new(window.AudioContext||window.webkitAudioContext)());
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type=type;o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+dur);
+    o.connect(g);g.connect(AC.destination);
+    o.start();o.stop(AC.currentTime+dur);
   }catch(e){}
 }
-
-/* ---------- input ---------- */
-const input = { dir:0, tilt:0 };
-function bindTap(){
-  const dirFrom = x => (x < window.innerWidth/2 ? -1 : 1);
-  addEventListener('pointerdown', e=>{
-    if(state!=='playing') return;
-    if(e.target.closest('#pauseBtn')) return;
-    if(e.clientY < window.innerHeight/3){ shoot(); return; }
-    if(settings.controls==='tap') input.dir = dirFrom(e.clientX);
-  });
-  addEventListener('pointerup',   ()=> input.dir = 0);
-  addEventListener('pointercancel',()=> input.dir = 0);
-  addEventListener('keydown', e=>{
-    if(e.key==='ArrowLeft') input.dir=-1;
-    if(e.key==='ArrowRight') input.dir=1;
-    if(e.key===' '||e.key==='ArrowUp') shoot();
-    if(e.key==='Escape' && state==='playing') pauseGame();
-  });
-  addEventListener('keyup', e=>{
-    if(e.key==='ArrowLeft'&&input.dir===-1) input.dir=0;
-    if(e.key==='ArrowRight'&&input.dir===1) input.dir=0;
-  });
+function r2d2Beep(){
+  if(!settings.sound)return;
+  [900,1200,800,1400,600].forEach((f,i)=>setTimeout(()=>beep(f,0.08,'sine',0.05),i*80));
 }
-bindTap();
+function buzzLaser(){
+  if(!settings.sound)return;
+  try{
+    AC=AC||(new(window.AudioContext||window.webkitAudioContext)());
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(1400,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(200,AC.currentTime+0.15);
+    g.gain.setValueAtTime(0.06,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+0.15);
+    o.connect(g);g.connect(AC.destination);
+    o.start();o.stop(AC.currentTime+0.15);
+  }catch(e){}
+}
+function infinityJingle(){
+  if(!settings.sound)return;
+  [440,550,660,880,1100].forEach((f,i)=>setTimeout(()=>beep(f,0.12,'sine',0.06),i*90));
+}
 
-let tiltBound = false;
+/* ── Toast ── */
+let toastTimer=null;
+function toast(msg,dur=2800){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),dur);
+}
+
+/* ── Input ── */
+const input={dir:0,tilt:0};
+let tiltBound=false;
+
+addEventListener('pointerdown',e=>{
+  if(state!=='playing')return;
+  if(e.target.closest('#pauseBtn'))return;
+  if(e.clientY<window.innerHeight/3){shoot();return;}
+  if(settings.controls==='tap') input.dir=e.clientX<window.innerWidth/2?-1:1;
+});
+addEventListener('pointerup',()=>input.dir=0);
+addEventListener('pointercancel',()=>input.dir=0);
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft')input.dir=-1;
+  if(e.key==='ArrowRight')input.dir=1;
+  if(e.key===' '||e.key==='ArrowUp'){e.preventDefault();shoot();}
+  if(e.key==='Escape'&&state==='playing')pauseGame();
+  checkBuzzSeq(e.key.toUpperCase());
+});
+addEventListener('keyup',e=>{
+  if(e.key==='ArrowLeft'&&input.dir===-1)input.dir=0;
+  if(e.key==='ArrowRight'&&input.dir===1)input.dir=0;
+});
+
 async function enableTilt(){
-  if(typeof DeviceOrientationEvent !== 'undefined' &&
-     typeof DeviceOrientationEvent.requestPermission === 'function'){
-    try{ const p = await DeviceOrientationEvent.requestPermission(); if(p!=='granted') return false; }
-    catch(e){ return false; }
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+    try{const p=await DeviceOrientationEvent.requestPermission();if(p!=='granted')return false;}catch(e){return false;}
   }
-  if(!tiltBound){
-    addEventListener('deviceorientation', e=>{ input.tilt = (e.gamma||0)/22; });
-    tiltBound = true;
-  }
+  if(!tiltBound){addEventListener('deviceorientation',e=>{input.tilt=(e.gamma||0)/22;});tiltBound=true;}
   return true;
 }
 
-/* ---------- game state ---------- */
-let state = 'menu';        // menu | settings | intro | playing | paused | fail | clear | win
-let level = 0;
-let player, platforms, particles, cam, maxAlt, finishPad, levelDone;
-let hazards = [], bullets = [], shootCd = 0;
-let stars = [];
+/* ── BUZZ Easter Egg (keyboard: B U Z Z) ── */
+function checkBuzzSeq(key){
+  const seq=['B','U','Z','Z'];
+  eggs.buzzSeq.push(key);
+  if(eggs.buzzSeq.length>4)eggs.buzzSeq.shift();
+  if(eggs.buzzSeq.join('')===seq.join('')){
+    eggs.buzzActive=!eggs.buzzActive;
+    infinityJingle();
+    toast(eggs.buzzActive?'🚀 To infinity and beyond! (Buzz laser ON)':'Buzz laser off. Back to reality.');
+    eggs.buzzSeq=[];
+  }
+}
+
+/* ── Title tap easter egg ── */
+document.getElementById('mainTitle').addEventListener('click',()=>{
+  eggs.titleTaps++;
+  clearTimeout(eggs.titleTapTimer);
+  eggs.titleTapTimer=setTimeout(()=>eggs.titleTaps=0,1800);
+  if(eggs.titleTaps>=5){
+    eggs.titleTaps=0;
+    openSunLevel();
+  }
+});
+
+/* ── APOD credit tap ── */
+document.getElementById('credit').addEventListener('click',()=>{
+  const m=apod.meta[level];
+  if(!m)return;
+  const modal=document.getElementById('apodModal');
+  document.getElementById('apodModalTitle').textContent=m.title||'';
+  document.getElementById('apodModalBody').textContent=m.explanation||'';
+  const img=document.getElementById('apodImg');
+  img.src=m.url&&!m.url.includes('youtube')?m.url:(m.thumbnail_url||'');
+  img.style.display=img.src?'block':'none';
+  modal.classList.remove('hidden');
+});
+document.getElementById('apodClose').onclick=()=>document.getElementById('apodModal').classList.add('hidden');
+
+/* ── PWA Install ── */
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredInstall=e;
+  document.getElementById('installBanner').classList.remove('hidden');
+});
+document.getElementById('installYes').onclick=async()=>{
+  if(!deferredInstall)return;
+  deferredInstall.prompt();
+  const r=await deferredInstall.userChoice;
+  deferredInstall=null;
+  document.getElementById('installBanner').classList.add('hidden');
+};
+document.getElementById('installNo').onclick=()=>document.getElementById('installBanner').classList.add('hidden');
+
+/* ── Game state ── */
+let state='menu';
+let level=0;
+let player,platforms,particles,cam,maxAlt,finishPad,levelDone;
+let hazards=[],bullets=[],shootCd=0;
+let ringBands=[];             // Saturn ring-band hazards
+let wormholes=[];             // wormhole pads
+let ghostTimer=0;             // ghost platform pulse
+let gravMult=1;               // heavy/low grav modifier
+let sunMeltTimer=0;           // secret sun level
+let deathsThisLevel=0;
+let stars=[];
+let totalAlt=0;
+let lifetimeGain=0;           // added this session
+
+const rand=(a,b)=>a+Math.random()*(b-a);
 
 function makeStars(){
-  stars = [];
-  for(let i=0;i<90;i++) stars.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.6+0.4, p:Math.random()*Math.PI*2, d:0.3+Math.random()*0.7});
+  stars=[];
+  for(let i=0;i<90;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.4,p:Math.random()*Math.PI*2,d:0.3+Math.random()*0.7});
 }
 makeStars();
 
-const rand = (a,b)=> a + Math.random()*(b-a);
-
-function spawnPlatform(y, cfg){
-  const r = Math.random();
-  let type = 'solid';
-  if(r < cfg.moving) type = 'moving';
-  else if(r < cfg.moving + cfg.brittle) type = 'brittle';
-  return {
-    x: rand(10, W-80), y, w:68, h:14, type,
-    vx: type==='moving' ? (Math.random()<.5?-1:1)*rand(1,1.8) : 0,
-    spring: Math.random() < cfg.spring,
-    broken:false
-  };
+/* ── Platform / hazard spawners ── */
+function spawnPlatform(y,cfg){
+  const r=Math.random();
+  let type='solid';
+  if(r<cfg.moving)type='moving';
+  else if(r<cfg.moving+cfg.brittle)type='brittle';
+  const ghost=cfg.mechanic==='ghost'&&type==='solid'&&Math.random()<0.45;
+  return{x:rand(10,W-80),y,w:68,h:14,type,vx:type==='moving'?(Math.random()<.5?-1:1)*rand(1,1.8):0,
+    spring:Math.random()<cfg.spring,broken:false,ghost,ghostPhase:Math.random()*Math.PI*2,ghostVis:1};
 }
 
-function spawnHazard(y, cfg){
-  if(cfg.bh && Math.random() < cfg.bh){
-    hazards.push({type:'blackhole', x:rand(50,W-50), y:y-rand(30,70), r:15, pull:110, vx:0, rot:0});
+function spawnHazard(y,cfg){
+  if(cfg.bh&&Math.random()<cfg.bh){
+    hazards.push({type:'blackhole',x:rand(50,W-50),y:y-rand(30,70),r:15,pull:110,vx:0,rot:0});
     return;
   }
-  if(Math.random() < (cfg.hazard||0)){
-    hazards.push({type:cfg.hazType, x:rand(24,W-24), y:y-rand(20,60), r:14,
-      vx:(Math.random()<.5?-1:1)*rand(0.6,1.6), rot:Math.random()*Math.PI*2});
+  if(Math.random()<(cfg.hazard||0)){
+    const isAlien=(level>=7&&Math.random()<0.18);
+    hazards.push({type:cfg.hazType,x:rand(24,W-24),y:y-rand(20,60),r:14,
+      vx:(Math.random()<.5?-1:1)*rand(0.6,1.6),rot:Math.random()*Math.PI*2,alien:isAlien});
   }
+}
+
+function spawnRingBands(){
+  ringBands=[];
+  for(let i=0;i<4;i++) ringBands.push({y:H*0.2+i*(H*0.19),vy:rand(0.5,1.0)*(Math.random()<.5?1:-1),thick:22+rand(0,16)});
+}
+
+function spawnWormhole(y){
+  wormholes.push({x:rand(30,W-60),y,r:18,rot:0,active:true});
 }
 
 function shoot(){
-  if(state!=='playing' || shootCd > 0) return;
-  shootCd = 14;
-  bullets.push({x:player.x+16, y:player.y-4, vy:-11});
-  beep(980,0.05,'square',0.03);
+  if(state!=='playing'||shootCd>0)return;
+  shootCd=14;
+  if(eggs.buzzActive)buzzLaser();else beep(980,0.05,'square',0.03);
+  bullets.push({x:player.x+16,y:player.y-4,vy:-11,buzz:eggs.buzzActive});
 }
 
+/* ── Start level ── */
 function startLevel(n){
-  level = n;
-  const cfg = LEVELS[n];
-  platforms = []; particles = []; hazards = []; bullets = []; shootCd = 0;
-  let y = H - 40;
-  platforms.push({x:W/2-50, y, w:100, h:14, type:'solid', vx:0, spring:false, broken:false});
-  while(y > -H){
-    y -= rand(cfg.gap[0], cfg.gap[1]);
-    platforms.push(spawnPlatform(y, cfg));
-    if(y < H - 400) spawnHazard(y, cfg); // keep the launch zone clean
+  level=n;
+  const cfg=LEVELS[n];
+  platforms=[];particles=[];hazards=[];bullets=[];ringBands=[];wormholes=[];
+  shootCd=0;ghostTimer=0;sunMeltTimer=0;
+
+  // gravity mod
+  gravMult=cfg.mechanic==='heavy-grav'?1.4:cfg.mechanic==='low-grav'?0.42:1;
+
+  // starting safe platform
+  let y=H-40;
+  platforms.push({x:W/2-50,y,w:100,h:14,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1});
+
+  while(y>-H){
+    y-=rand(cfg.gap[0],cfg.gap[1]);
+    platforms.push(spawnPlatform(y,cfg));
+    if(y<H-400)spawnHazard(y,cfg);
+    if(cfg.mechanic==='wormhole'&&Math.random()<0.09)spawnWormhole(y-40);
   }
-  player = { x:W/2-16, y:H-90, w:32, h:38, vx:0, vy:-13.2, face:1 };
-  cam = 0; maxAlt = 0; levelDone = false; finishPad = null;
-  document.getElementById('lvlTag').textContent = 'LV ' + (n+1);
-  const m = apod.meta[n];
-  document.getElementById('credit').textContent = m ? ('NASA APOD — ' + (m.title||'') + (m.copyright? ' © '+m.copyright.trim():'' )) : '';
-  document.getElementById('tapHint').style.display = 'flex';
-  document.getElementById('hintL').style.visibility = settings.controls==='tap' ? 'visible' : 'hidden';
-  document.getElementById('hintR').style.visibility = settings.controls==='tap' ? 'visible' : 'hidden';
+
+  if(cfg.mechanic==='ring-bands')spawnRingBands();
+
+  player={x:W/2-16,y:H-90,w:32,h:38,vx:0,vy:-13.2,face:1};
+  cam=0;maxAlt=0;levelDone=false;finishPad=null;
+
+  document.getElementById('lvlTag').textContent=`LV ${n+1}`;
+  document.getElementById('tapHint').style.display='flex';
+  document.getElementById('hintL').style.visibility=settings.controls==='tap'?'visible':'hidden';
+  document.getElementById('hintR').style.visibility=settings.controls==='tap'?'visible':'hidden';
+
+  const m=apod.meta[n];
+  document.getElementById('credit').textContent=m?`NASA APOD — ${m.title||''}${m.copyright?' © '+m.copyright.trim():''}`:'' ;
+
   setState('playing');
 }
 
-/* ---------- physics ---------- */
-const GRAV = 0.38, JUMP = -13.2, SPRING_V = -20, MOVE = 0.55, MAXVX = 6.2;
+/* ── Secret Sun level ── */
+function openSunLevel(){
+  beep(1200,0.05);beep(800,0.3,'sawtooth',0.08);
+  toast('☀️ CLASSIFIED LEVEL UNLOCKED',2000);
+  setTimeout(()=>{
+    level=99; // sentinel
+    state='playing';
+    document.getElementById('hud').classList.add('show');
+    show(null);
+    platforms=[{x:0,y:H-30,w:W,h:20,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1}];
+    hazards=[];bullets=[];particles=[];ringBands=[];wormholes=[];
+    player={x:W/2-16,y:H-90,w:32,h:38,vx:0,vy:-10,face:1};
+    cam=0;maxAlt=0;finishPad=null;levelDone=true;
+    sunMeltTimer=0;gravMult=1;
+    document.getElementById('lvlTag').textContent='LV ☀️';
+    document.getElementById('credit').textContent='YOU WERE WARNED';
+  },800);
+}
+
+/* ── Physics ── */
+const BASE_GRAV=0.38,JUMP=-13.2,SPRING_V=-20,MOVE=0.55,MAXVX=6.2;
 
 function update(){
-  const cfg = LEVELS[level];
+  if(level===99){updateSun();return;}
+  const cfg=LEVELS[level];
+  const grav=BASE_GRAV*gravMult;
+  const jumpV=cfg.mechanic==='low-grav'?JUMP*0.85:JUMP;
+  const springV=cfg.mechanic==='heavy-grav'?SPRING_V*1.2:SPRING_V;
 
   // steer
-  if(settings.controls==='tilt') player.vx += input.tilt * 0.9;
-  else player.vx += input.dir * MOVE;
-  player.vx *= 0.94;
-  player.vx = Math.max(-MAXVX, Math.min(MAXVX, player.vx));
-  if(Math.abs(player.vx)>0.3) player.face = player.vx>0?1:-1;
+  if(settings.controls==='tilt')player.vx+=input.tilt*0.9;
+  else player.vx+=input.dir*MOVE;
+  player.vx*=0.94;
+  player.vx=Math.max(-MAXVX,Math.min(MAXVX,player.vx));
+  if(Math.abs(player.vx)>0.3)player.face=player.vx>0?1:-1;
 
-  player.vy += GRAV;
-  player.x += player.vx;
-  player.y += player.vy;
+  player.vy+=grav;
+  player.x+=player.vx;
+  player.y+=player.vy;
 
-  // horizontal wrap
-  if(player.x > W) player.x = -player.w;
-  if(player.x < -player.w) player.x = W;
+  if(player.x>W)player.x=-player.w;
+  if(player.x<-player.w)player.x=W;
 
-  // platform collisions (only while falling)
-  if(player.vy > 0){
-    const feet = player.y + player.h;
+  // ghost platform pulse
+  ghostTimer++;
+  for(const p of platforms){
+    if(!p.ghost)continue;
+    p.ghostVis=0.5+0.5*Math.sin(ghostTimer*0.05+p.ghostPhase);
+    p.ghostSolid=p.ghostVis>0.5;
+  }
+
+  // platform collisions
+  if(player.vy>0){
+    const feet=player.y+player.h;
     for(const p of platforms){
-      if(p.broken) continue;
-      if(player.x + player.w*0.7 > p.x && player.x + player.w*0.3 < p.x + p.w &&
-         feet > p.y && feet < p.y + p.h + player.vy){
-        if(p.type==='brittle'){ p.broken = true; beep(140,0.1,'sawtooth'); jet(p.x+p.w/2,p.y, '#888'); continue; }
-        player.y = p.y - player.h;
-        player.vy = p.spring ? SPRING_V : JUMP;
-        beep(p.spring? 880: 520, p.spring? .12:.06);
-        jet(player.x+player.w/2, player.y+player.h, p.spring? '#ffb340':'#5ce8ff');
-        if(p===finishPad){ completeLevel(); return; }
+      if(p.broken)continue;
+      if(p.ghost&&!p.ghostSolid)continue;
+      if(player.x+player.w*0.7>p.x&&player.x+player.w*0.3<p.x+p.w&&feet>p.y&&feet<p.y+p.h+player.vy){
+        if(p.type==='brittle'){p.broken=true;beep(140,0.1,'sawtooth');jet(p.x+p.w/2,p.y,'#888');continue;}
+        player.y=p.y-player.h;
+        player.vy=p.spring?springV:jumpV;
+        beep(p.spring?880:520,p.spring?.12:.06);
+        jet(player.x+player.w/2,player.y+player.h,p.spring?'#ffb340':'#5ce8ff');
+        if(p===finishPad){completeLevel();return;}
       }
     }
   }
 
   // moving platforms
   for(const p of platforms){
-    if(p.type==='moving'){ p.x += p.vx; if(p.x<4||p.x+p.w>W-4) p.vx*=-1; }
+    if(p.type==='moving'){p.x+=p.vx;if(p.x<4||p.x+p.w>W-4)p.vx*=-1;}
+  }
+
+  // ring bands (Saturn)
+  if(cfg.mechanic==='ring-bands'){
+    for(const rb of ringBands){
+      rb.y+=rb.vy;
+      if(rb.y>H+rb.thick)rb.y=-rb.thick;
+      if(rb.y<-rb.thick)rb.y=H+rb.thick;
+      // player collision with ring band
+      if(player.y+player.h>rb.y&&player.y<rb.y+rb.thick){failGame();return;}
+    }
+  }
+
+  // wormholes
+  if(cfg.mechanic==='wormhole'||cfg.mechanic==='event-horizon'||cfg.mechanic==='low-grav'){
+    for(const w of wormholes){
+      w.rot+=0.04;
+      const dx=player.x+16-w.x,dy=player.y+19-w.y;
+      if(Math.hypot(dx,dy)<w.r+10){
+        // teleport up
+        const lift=rand(H*0.3,H*0.5);
+        player.y-=lift;
+        player.vy=JUMP*0.7;
+        beep(440,0.1,'sine');setTimeout(()=>beep(880,0.1,'sine'),100);
+        jet(player.x+16,player.y+19,'#c9a8ff');
+        break;
+      }
+    }
   }
 
   // hazards
-  if(shootCd > 0) shootCd--;
-  const pcx = player.x+16, pcy = player.y+19;
+  if(shootCd>0)shootCd--;
+  const pcx=player.x+16,pcy=player.y+19;
   for(const h of hazards){
     if(h.type==='blackhole'){
-      const dx = h.x-pcx, dy = h.y-pcy, d = Math.hypot(dx,dy)||1;
-      if(d < h.pull){ const f = (1 - d/h.pull); player.vx += dx/d*f*0.9; player.vy += dy/d*f*0.5; }
-      if(d < h.r+10){ failGame(); return; }
+      const dx=h.x-pcx,dy=h.y-pcy,d=Math.hypot(dx,dy)||1;
+      if(d<h.pull){const f=(1-d/h.pull);player.vx+=dx/d*f*0.9;player.vy+=dy/d*f*0.5;}
+      if(d<h.r+10){failGame();return;}
     } else {
-      h.x += h.vx; h.rot += 0.03*Math.sign(h.vx||1);
-      if(h.x < h.r || h.x > W-h.r) h.vx *= -1;
-      if(Math.abs(h.x-pcx) < h.r+12 && Math.abs(h.y-pcy) < h.r+14){ failGame(); return; }
+      h.x+=h.vx;h.rot+=0.03*Math.sign(h.vx||1);
+      if(h.x<h.r||h.x>W-h.r)h.vx*=-1;
+      if(Math.abs(h.x-pcx)<h.r+12&&Math.abs(h.y-pcy)<h.r+14){failGame();return;}
     }
   }
 
   // bullets
   for(const b of bullets){
-    b.y += b.vy;
+    b.y+=b.vy;
     for(const h of hazards){
-      if(h.type==='blackhole' || h.dead) continue;
-      if(Math.abs(b.x-h.x) < h.r+5 && Math.abs(b.y-h.y) < h.r+5){
-        h.dead = true; b.dead = true;
+      if(h.type==='blackhole'||h.dead)continue;
+      if(Math.abs(b.x-h.x)<h.r+5&&Math.abs(b.y-h.y)<h.r+5){
+        h.dead=true;b.dead=true;
         beep(220,0.12,'sawtooth',0.05);
-        jet(h.x, h.y, '#ff5c7a'); jet(h.x, h.y, '#ffb340');
+        jet(h.x,h.y,'#ff5c7a');jet(h.x,h.y,'#ffb340');
       }
     }
   }
-  bullets = bullets.filter(b=>!b.dead && b.y > -40);
-  hazards = hazards.filter(h=>!h.dead);
+  bullets=bullets.filter(b=>!b.dead&&b.y>-40);
+  hazards=hazards.filter(h=>!h.dead);
 
-  // camera follows upward only
-  const lift = H*0.42 - player.y;
-  if(lift > 0){
-    player.y += lift;
-    for(const p of platforms) p.y += lift;
-    for(const pt of particles) pt.y += lift;
-    for(const h of hazards) h.y += lift;
-    for(const b of bullets) b.y += lift;
-    cam += lift;
-    maxAlt = Math.max(maxAlt, cam);
+  // camera lift
+  const lift=H*0.42-player.y;
+  if(lift>0){
+    player.y+=lift;
+    for(const p of platforms)p.y+=lift;
+    for(const pt of particles)pt.y+=lift;
+    for(const h of hazards)h.y+=lift;
+    for(const b of bullets)b.y+=lift;
+    for(const w of wormholes)w.y+=lift;
+    for(const rb of ringBands){}; // ring bands are viewport-relative, skip
+    cam+=lift;
+    maxAlt=Math.max(maxAlt,cam);
   }
 
-  // spawn ahead / cull below
-  let topY = Math.min(...platforms.map(p=>p.y));
-  while(topY > -120 && !levelDone){
-    topY -= rand(cfg.gap[0], cfg.gap[1]);
-    if(maxAlt + (H*0.42 - topY) >= cfg.goal && !finishPad){
-      finishPad = {x:W/2-70, y:topY, w:140, h:18, type:'finish', vx:0, spring:false, broken:false};
-      platforms.push(finishPad);
-      levelDone = true; // stop generating past the station
+  // spawn ahead
+  let topY=Math.min(...platforms.map(p=>p.y));
+  while(topY>-120&&!levelDone){
+    topY-=rand(cfg.gap[0],cfg.gap[1]);
+    const altHere=maxAlt+(H*0.42-topY);
+    if(altHere>=cfg.goal&&!finishPad){
+      finishPad={x:W/2-70,y:topY,w:140,h:18,type:'finish',vx:0,spring:false,broken:false,ghost:false,ghostVis:1};
+      platforms.push(finishPad);levelDone=true;
     } else {
-      platforms.push(spawnPlatform(topY, cfg));
-      spawnHazard(topY, cfg);
+      platforms.push(spawnPlatform(topY,cfg));
+      spawnHazard(topY,cfg);
+      if((cfg.mechanic==='wormhole')&&Math.random()<0.09)spawnWormhole(topY-40);
     }
   }
-  platforms = platforms.filter(p => p.y < H + 60 && !(p.broken && p.y > H));
-  hazards = hazards.filter(h => h.y < H + 80);
+  platforms=platforms.filter(p=>p.y<H+60&&!(p.broken&&p.y>H));
+  hazards=hazards.filter(h=>!h.dead&&h.y<H+80);
+  wormholes=wormholes.filter(w=>w.y<H+60);
 
   // particles
-  for(const pt of particles){ pt.x+=pt.vx; pt.y+=pt.vy; pt.vy+=0.05; pt.life--; }
-  particles = particles.filter(pt=>pt.life>0);
+  for(const pt of particles){pt.x+=pt.vx;pt.y+=pt.vy;pt.vy+=0.05;pt.life--;}
+  particles=particles.filter(pt=>pt.life>0);
 
   // fall = fail
-  if(player.y > H + 60){ failGame(); return; }
+  if(player.y>H+60){failGame();return;}
 
   // HUD
-  document.getElementById('altTag').textContent = Math.floor(maxAlt/10) + ' m';
-  document.getElementById('progressBar').style.width = Math.min(100, maxAlt/cfg.goal*100) + '%';
+  document.getElementById('altTag').textContent=Math.floor(maxAlt/10)+' m';
+  const pct=Math.min(100,maxAlt/LEVELS[level].goal*100);
+  document.getElementById('progressBar').style.width=pct+'%';
+
+  // Vulcan salute at 100%
+  if(pct>=100&&!eggs.vulcanShown){eggs.vulcanShown=true;toast('🖖 Live long and prosper');}
+
+  // STAY easter egg on level 8 (Interstellar Void)
+  if(level===7&&cam>800&&!eggs.stayShown){eggs.stayShown=true;showStay();}
 }
 
-function jet(x,y,color){
-  for(let i=0;i<7;i++) particles.push({x,y,vx:rand(-1.4,1.4),vy:rand(0.4,2),life:rand(14,26),color});
+/* ── Sun level update ── */
+function updateSun(){
+  sunMeltTimer++;
+  player.vy+=BASE_GRAV;
+  player.x+=player.vx;
+  player.y+=player.vy;
+  if(player.x>W)player.x=-player.w;
+  if(player.x<-player.w)player.x=W;
+
+  // melt platforms
+  for(const p of platforms){p.w=Math.max(0,p.w-0.4);}
+  platforms=platforms.filter(p=>p.w>4&&p.y<H+60);
+
+  if(player.vy>0){
+    const feet=player.y+player.h;
+    for(const p of platforms){
+      if(player.x+player.w*0.7>p.x&&player.x+player.w*0.3<p.x+p.w&&feet>p.y&&feet<p.y+p.h+player.vy){
+        player.y=p.y-player.h;player.vy=JUMP;beep(880+sunMeltTimer*2,0.05);
+      }
+    }
+  }
+  if(player.y>H+60||sunMeltTimer>380){
+    state='sun';
+    document.getElementById('hud').classList.remove('show');
+    show('sunScreen');beep(110,0.5,'sawtooth',0.08);
+  }
 }
 
-/* ---------- drawing ---------- */
+/* ── STAY flash ── */
+let stayOverlay=null;
+function showStay(){
+  // flash "STAY" in morse-like pulses using toast
+  const msg=['S','T','A','Y'];
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i>=msg.length){clearInterval(iv);return;}
+    toast('— '+msg[i]+' —',400);i++;
+  },550);
+  setTimeout(()=>toast('🌌 "STAY" — Cooper,  Interstellar',2500),2800);
+}
+
+/* ── Drawing ── */
 function draw(){
-  const cfg = LEVELS[level];
+  if(level===99){drawSun();return;}
+  const cfg=LEVELS[level];
 
-  // backdrop: NASA APOD if loaded, else tinted void
-  ctx.fillStyle = '#05070f';
-  ctx.fillRect(0,0,W,H);
-  const img = apod.images[level];
+  // backdrop
+  ctx.fillStyle='#05070f';ctx.fillRect(0,0,W,H);
+  const img=apod.images[level];
   if(img){
-    const s = Math.max(W/img.width, H/img.height);
-    const iw = img.width*s, ih = img.height*s;
-    const drift = (cam*0.06) % Math.max(1,(ih-H));
-    ctx.globalAlpha = 0.5;
-    ctx.drawImage(img, (W-iw)/2, (H-ih)/2 + drift*0.3, iw, ih);
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = 'rgba(5,7,15,0.45)';
-    ctx.fillRect(0,0,W,H);
+    const s=Math.max(W/img.width,H/img.height);
+    const iw=img.width*s,ih=img.height*s;
+    ctx.globalAlpha=0.5;
+    ctx.drawImage(img,(W-iw)/2,(H-ih)/2,iw,ih);
+    ctx.globalAlpha=1;
+    ctx.fillStyle='rgba(5,7,15,0.5)';ctx.fillRect(0,0,W,H);
   } else {
-    const g = ctx.createLinearGradient(0,0,0,H);
-    g.addColorStop(0,cfg.tint); g.addColorStop(1,'#05070f');
-    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,cfg.tint);g.addColorStop(1,'#05070f');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   }
 
-  // parallax stars
+  // stars
   for(const s of stars){
-    const sy = (s.y + cam*0.15*s.d) % H;
-    const tw = 0.5 + 0.5*Math.sin(s.p + performance.now()/700);
-    ctx.globalAlpha = 0.25 + 0.6*tw;
-    ctx.fillStyle = cfg.star;
-    ctx.fillRect(s.x, sy, s.r, s.r);
+    const sy=(s.y+cam*0.15*s.d)%H;
+    const tw=0.5+0.5*Math.sin(s.p+performance.now()/700);
+    ctx.globalAlpha=0.25+0.6*tw;ctx.fillStyle=cfg.star;
+    ctx.fillRect(s.x,sy,s.r,s.r);
   }
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha=1;
+
+  // ring bands
+  if(cfg.mechanic==='ring-bands'){
+    for(const rb of ringBands){
+      const g=ctx.createLinearGradient(0,rb.y,0,rb.y+rb.thick);
+      g.addColorStop(0,'rgba(255,200,100,0)');g.addColorStop(0.3,'rgba(255,180,80,0.55)');
+      g.addColorStop(0.7,'rgba(255,160,60,0.55)');g.addColorStop(1,'rgba(255,200,100,0)');
+      ctx.fillStyle=g;ctx.fillRect(0,rb.y,W,rb.thick);
+    }
+  }
+
+  // wormholes
+  for(const w of wormholes){
+    ctx.save();ctx.translate(w.x,w.y);
+    for(let i=3;i>=0;i--){
+      ctx.globalAlpha=0.15+i*0.12;
+      ctx.strokeStyle=i%2?'#c9a8ff':'#5ce8ff';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(0,0,w.r+i*6+3*Math.sin(w.rot+i),0,Math.PI*2);ctx.stroke();
+    }
+    ctx.globalAlpha=1;ctx.fillStyle='rgba(50,0,80,0.7)';
+    ctx.beginPath();ctx.arc(0,0,w.r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
 
   // platforms
   for(const p of platforms){
-    if(p.broken) continue;
-    if(p.type==='finish'){ drawStation(p); continue; }
-    ctx.fillStyle = p.type==='moving' ? '#5ce8ff' : p.type==='brittle' ? '#5a5f78' : '#eef1ff';
-    ctx.fillRect(p.x, p.y, p.w, p.h);
-    ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    ctx.fillRect(p.x, p.y+p.h-4, p.w, 4);
+    if(p.broken)continue;
+    if(p.type==='finish'){drawStation(p);continue;}
+    if(p.ghost){ctx.globalAlpha=p.ghostVis;}
+    ctx.fillStyle=p.type==='moving'?'#5ce8ff':p.type==='brittle'?'#5a5f78':'#eef1ff';
+    if(save.golden&&p.type==='solid')ctx.fillStyle='#ffd700';
+    ctx.fillRect(p.x,p.y,p.w,p.h);
+    ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fillRect(p.x,p.y+p.h-4,p.w,4);
     if(p.type==='brittle'){
-      ctx.strokeStyle = '#2c3046'; ctx.lineWidth=1.5; ctx.beginPath();
-      ctx.moveTo(p.x+p.w*0.3,p.y); ctx.lineTo(p.x+p.w*0.45,p.y+p.h);
-      ctx.moveTo(p.x+p.w*0.7,p.y+2); ctx.lineTo(p.x+p.w*0.6,p.y+p.h); ctx.stroke();
+      ctx.strokeStyle='#2c3046';ctx.lineWidth=1.5;ctx.beginPath();
+      ctx.moveTo(p.x+p.w*0.3,p.y);ctx.lineTo(p.x+p.w*0.45,p.y+p.h);
+      ctx.moveTo(p.x+p.w*0.7,p.y+2);ctx.lineTo(p.x+p.w*0.6,p.y+p.h);ctx.stroke();
     }
     if(p.spring){
-      ctx.fillStyle = '#ffb340';
-      ctx.fillRect(p.x+p.w/2-9, p.y-8, 18, 8);
-      ctx.fillRect(p.x+p.w/2-5, p.y-12, 10, 4);
+      ctx.fillStyle='#ffb340';ctx.fillRect(p.x+p.w/2-9,p.y-8,18,8);
+      ctx.fillRect(p.x+p.w/2-5,p.y-12,10,4);
     }
+    if(p.ghost)ctx.globalAlpha=1;
   }
-
-  // particles
-  for(const pt of particles){
-    ctx.globalAlpha = pt.life/26;
-    ctx.fillStyle = pt.color;
-    ctx.fillRect(pt.x, pt.y, 3, 3);
-  }
-  ctx.globalAlpha = 1;
 
   // hazards
   for(const h of hazards){
     if(h.type==='blackhole'){
-      const t = performance.now()/300;
-      ctx.save(); ctx.translate(h.x,h.y);
-      ctx.globalAlpha = 0.35; ctx.strokeStyle = '#c9a8ff'; ctx.lineWidth = 1;
-      for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(0,0,h.r+8+i*9 + 3*Math.sin(t+i),0,Math.PI*2); ctx.stroke(); }
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0,0,h.r,0,Math.PI*2); ctx.fill();
-      ctx.strokeStyle = '#c9a8ff'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(0,0,h.r,0,Math.PI*2); ctx.stroke();
+      ctx.save();ctx.translate(h.x,h.y);
+      const t=performance.now()/300;
+      ctx.globalAlpha=0.35;ctx.strokeStyle='#c9a8ff';ctx.lineWidth=1;
+      for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(0,0,h.r+8+i*9+3*Math.sin(t+i),0,Math.PI*2);ctx.stroke();}
+      ctx.globalAlpha=1;ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,h.r,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#c9a8ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,h.r,0,Math.PI*2);ctx.stroke();
       ctx.restore();
     } else if(h.type==='satellite'){
-      ctx.save(); ctx.translate(h.x,h.y); ctx.rotate(h.rot*0.4);
-      ctx.fillStyle = '#5ce8ff'; ctx.fillRect(-24,-4,15,8); ctx.fillRect(9,-4,15,8);
-      ctx.fillStyle = '#eef1ff'; ctx.fillRect(-8,-8,16,16);
-      ctx.fillStyle = '#ff5c7a'; ctx.fillRect(-2,-11,4,3);
-      ctx.restore();
-    } else { // asteroid
-      ctx.save(); ctx.translate(h.x,h.y); ctx.rotate(h.rot);
-      ctx.fillStyle = '#8a7a6a';
-      ctx.beginPath();
-      for(let i=0;i<7;i++){
-        const a = i/7*Math.PI*2, r = h.r*(0.8+0.3*Math.sin(i*3));
-        ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+      ctx.save();ctx.translate(h.x,h.y);ctx.rotate(h.rot*0.4);
+      if(h.alien){drawXenomorph(ctx);}else{
+        ctx.fillStyle='#5ce8ff';ctx.fillRect(-24,-4,15,8);ctx.fillRect(9,-4,15,8);
+        ctx.fillStyle='#eef1ff';ctx.fillRect(-8,-8,16,16);
+        ctx.fillStyle='#ff5c7a';ctx.fillRect(-2,-11,4,3);
       }
-      ctx.closePath(); ctx.fill();
-      ctx.fillStyle = 'rgba(0,0,0,0.3)';
-      ctx.beginPath(); ctx.arc(3,2,4,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    } else {
+      ctx.save();ctx.translate(h.x,h.y);ctx.rotate(h.rot);
+      if(h.alien){drawXenomorph(ctx);}else{
+        ctx.fillStyle='#8a7a6a';ctx.beginPath();
+        for(let i=0;i<7;i++){const a=i/7*Math.PI*2,r=h.r*(0.8+0.3*Math.sin(i*3));ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}
+        ctx.closePath();ctx.fill();
+        ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.arc(3,2,4,0,Math.PI*2);ctx.fill();
+      }
       ctx.restore();
     }
   }
 
   // bullets
-  ctx.fillStyle = '#ffb340';
-  for(const b of bullets) ctx.fillRect(b.x-2, b.y-6, 4, 10);
+  for(const b of bullets){
+    if(b.buzz){
+      ctx.fillStyle='#c9a8ff';
+      // Buzz "laser" — wider beam with glow
+      ctx.globalAlpha=0.5;ctx.fillRect(b.x-4,b.y-10,8,14);
+      ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.fillRect(b.x-1,b.y-10,2,14);
+    } else {
+      ctx.fillStyle='#ffb340';ctx.fillRect(b.x-2,b.y-6,4,10);
+    }
+  }
+  ctx.globalAlpha=1;
 
-  drawAstronaut(player.x, player.y, player.face, player.vy);
+  // particles
+  for(const pt of particles){
+    ctx.globalAlpha=pt.life/26;ctx.fillStyle=pt.color;ctx.fillRect(pt.x,pt.y,3,3);
+  }
+  ctx.globalAlpha=1;
+
+  drawAstronaut(player.x,player.y,player.face,player.vy);
+}
+
+function drawSun(){
+  const t=performance.now()/400;
+  // solar gradient
+  const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,W);
+  g.addColorStop(0,'#fff8e0');g.addColorStop(0.3,'#ffb340');g.addColorStop(0.7,'#ff5c00');g.addColorStop(1,'#3a0a00');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // corona
+  ctx.globalAlpha=0.25+0.15*Math.sin(t);
+  for(let i=0;i<8;i++){
+    const a=i/8*Math.PI*2+t*0.1;
+    ctx.fillStyle='#ffdd88';ctx.beginPath();
+    ctx.moveTo(W/2,H/2);
+    ctx.lineTo(W/2+Math.cos(a)*W*0.6,H/2+Math.sin(a)*H*0.6);
+    ctx.lineTo(W/2+Math.cos(a+0.2)*W*0.55,H/2+Math.sin(a+0.2)*H*0.55);
+    ctx.closePath();ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  // melting platforms
+  for(const p of platforms){
+    ctx.globalAlpha=p.w/(W/4);
+    ctx.fillStyle='#ff9930';ctx.fillRect(p.x,p.y,p.w,p.h);
+  }
+  ctx.globalAlpha=1;
+  // astronaut (on fire)
+  drawAstronaut(player.x,player.y,player.face,-5);
+  // fire overlay on astronaut
+  ctx.globalAlpha=0.6;ctx.fillStyle=`rgba(255,${Math.floor(100+50*Math.sin(t*5))},0,0.5)`;
+  ctx.beginPath();ctx.arc(player.x+16,player.y+10,20,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  // warning text
+  ctx.fillStyle='rgba(255,255,220,0.85)';
+  ctx.font='bold 16px "Chakra Petch", monospace';
+  ctx.textAlign='center';
+  ctx.fillText('☀ SOLAR PROXIMITY CRITICAL ☀',W/2,40);
+  ctx.font='12px "Space Mono", monospace';
+  ctx.fillText('melting in T-'+(Math.max(0,Math.floor((380-sunMeltTimer)/60)))+'s',W/2,62);
 }
 
 function drawStation(p){
-  const t = performance.now()/400;
-  // beacon glow
-  ctx.globalAlpha = 0.25 + 0.15*Math.sin(t);
-  ctx.fillStyle = '#ffb340';
-  ctx.beginPath(); ctx.arc(p.x+p.w/2, p.y+p.h/2, 46, 0, Math.PI*2); ctx.fill();
-  ctx.globalAlpha = 1;
-  // deck
-  ctx.fillStyle = '#ffb340'; ctx.fillRect(p.x, p.y, p.w, p.h);
-  ctx.fillStyle = '#0b0e1a';
-  for(let i=0;i<5;i++) ctx.fillRect(p.x+8+i*27, p.y+5, 14, 4);
-  // antenna
-  ctx.strokeStyle = '#eef1ff'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(p.x+p.w/2, p.y); ctx.lineTo(p.x+p.w/2, p.y-26); ctx.stroke();
-  ctx.fillStyle = Math.sin(t*2)>0 ? '#ff5c7a' : '#5ce8ff';
-  ctx.beginPath(); ctx.arc(p.x+p.w/2, p.y-28, 4, 0, Math.PI*2); ctx.fill();
-  // label
-  ctx.fillStyle = '#0b0e1a';
-  ctx.font = '700 9px "Chakra Petch", monospace';
-  ctx.textAlign='center';
-  ctx.fillText('CHECKPOINT', p.x+p.w/2, p.y+p.h+12);
-  ctx.fillStyle = '#ffb340';
-  ctx.fillText('CHECKPOINT', p.x+p.w/2, p.y+p.h+12);
+  const t=performance.now()/400;
+  ctx.globalAlpha=0.25+0.15*Math.sin(t);
+  ctx.fillStyle='#ffb340';ctx.beginPath();ctx.arc(p.x+p.w/2,p.y+p.h/2,46,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#ffb340';ctx.fillRect(p.x,p.y,p.w,p.h);
+  ctx.fillStyle='#0b0e1a';for(let i=0;i<5;i++)ctx.fillRect(p.x+8+i*27,p.y+5,14,4);
+  ctx.strokeStyle='#eef1ff';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(p.x+p.w/2,p.y);ctx.lineTo(p.x+p.w/2,p.y-26);ctx.stroke();
+  ctx.fillStyle=Math.sin(t*2)>0?'#ff5c7a':'#5ce8ff';
+  ctx.beginPath();ctx.arc(p.x+p.w/2,p.y-28,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#0b0e1a';ctx.font='700 9px "Chakra Petch",monospace';ctx.textAlign='center';
+  ctx.fillText('CHECKPOINT',p.x+p.w/2,p.y+p.h+12);
+  ctx.fillStyle='#ffb340';ctx.fillText('CHECKPOINT',p.x+p.w/2,p.y+p.h+12);
 }
 
 function drawAstronaut(x,y,face,vy){
-  ctx.save();
-  ctx.translate(x+16, y+19);
-  ctx.scale(face,1);
-  // jet flame when rising
-  if(vy < -2){
-    ctx.fillStyle = '#ffb340';
-    ctx.beginPath();
-    ctx.moveTo(-5,18); ctx.lineTo(0,18+rand(6,12)); ctx.lineTo(5,18); ctx.fill();
+  const golden=save.golden&&level!==99;
+  ctx.save();ctx.translate(x+16,y+19);ctx.scale(face,1);
+  if(vy<-2){
+    ctx.fillStyle=golden?'#ffd700':'#ffb340';
+    ctx.beginPath();ctx.moveTo(-5,18);ctx.lineTo(0,18+rand(6,12));ctx.lineTo(5,18);ctx.fill();
   }
-  // backpack
-  ctx.fillStyle = '#5a5f78';
-  ctx.fillRect(-15,-8,8,20);
-  // body
-  ctx.fillStyle = '#eef1ff';
-  ctx.beginPath(); ctx.roundRect(-10,-6,22,24,7); ctx.fill();
-  // legs
-  ctx.fillRect(-7,16,7,6); ctx.fillRect(4,16,7,6);
-  // helmet
-  ctx.beginPath(); ctx.arc(2,-10,11,0,Math.PI*2); ctx.fill();
-  // visor
-  ctx.fillStyle = '#5ce8ff';
-  ctx.beginPath(); ctx.roundRect(-2,-15,12,11,5); ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillRect(4,-13,4,3);
+  ctx.fillStyle=golden?'#b8860b':'#5a5f78';ctx.fillRect(-15,-8,8,20);
+  ctx.fillStyle=golden?'#ffd700':'#eef1ff';
+  ctx.beginPath();ctx.roundRect(-10,-6,22,24,7);ctx.fill();
+  ctx.fillRect(-7,16,7,6);ctx.fillRect(4,16,7,6);
+  ctx.beginPath();ctx.arc(2,-10,11,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=golden?'#ffdd44':'#5ce8ff';
+  ctx.beginPath();ctx.roundRect(-2,-15,12,11,5);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.7)';ctx.fillRect(4,-13,4,3);
+  if(eggs.buzzActive){
+    // tiny Buzz wing on back
+    ctx.fillStyle='rgba(100,180,255,0.8)';
+    ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(22,-8);ctx.lineTo(22,4);ctx.closePath();ctx.fill();
+  }
   ctx.restore();
 }
 
-/* ---------- loop ---------- */
-let raf = null;
+function drawXenomorph(ctx){
+  ctx.fillStyle='#1a1a2a';
+  // elongated head
+  ctx.beginPath();ctx.ellipse(0,-16,6,12,0,0,Math.PI*2);ctx.fill();
+  // inner jaw
+  ctx.fillStyle='#3a3a4a';ctx.beginPath();ctx.ellipse(0,-14,3,7,0,0,Math.PI*2);ctx.fill();
+  // body
+  ctx.fillStyle='#1a1a2a';ctx.fillRect(-7,-4,14,12);
+  // tail
+  ctx.strokeStyle='#1a1a2a';ctx.lineWidth=2;ctx.beginPath();
+  ctx.moveTo(0,8);ctx.quadraticCurveTo(14,14,16,4);ctx.stroke();
+  ctx.fillStyle='#555';ctx.fillRect(-3,8,6,3);
+}
+
+function jet(x,y,color){
+  for(let i=0;i<7;i++)particles.push({x,y,vx:rand(-1.4,1.4),vy:rand(0.4,2),life:rand(14,26),color});
+}
+
+/* ── Loop ── */
 function loop(){
-  if(state==='playing'){ update(); if(state==='playing') draw(); }
-  raf = requestAnimationFrame(loop);
+  if(state==='playing'){update();if(state==='playing')draw();}
+  requestAnimationFrame(loop);
 }
 loop();
 
-/* ---------- screens / state ---------- */
-const screens = ['menuScreen','settingsScreen','introScreen','pauseScreen','failScreen','clearScreen','winScreen'];
+/* ── Screen management ── */
+const SCREENS=['menuScreen','settingsScreen','introScreen','pauseScreen','failScreen',
+               'clearScreen','winScreen','sunScreen'];
 function show(id){
-  screens.forEach(s=>document.getElementById(s).classList.toggle('hidden', s!==id));
-  if(!id) screens.forEach(s=>document.getElementById(s).classList.add('hidden'));
+  SCREENS.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
+  if(!id)SCREENS.forEach(s=>document.getElementById(s).classList.add('hidden'));
 }
 function setState(s){
-  state = s;
-  document.getElementById('hud').classList.toggle('show', s==='playing');
-  if(s==='playing') show(null);
+  state=s;
+  document.getElementById('hud').classList.toggle('show',s==='playing');
+  if(s==='playing')show(null);
 }
 
+/* ── Movie quote fail messages ── */
+const FAIL_QUOTES=[
+  {q:'"In space, no one can hear you scream." — Alien (1979)',e:'👾'},
+  {q:'"Do not go gentle into that good night." — Interstellar (2014)',e:'🌌'},
+  {q:'"I\'m afraid I can\'t do that." — 2001: A Space Odyssey',e:'🔴'},
+  {q:'"These aren\'t the platforms you\'re looking for." — Obi-Wan, probably',e:'⚔️'},
+  {q:'"That\'s one small step for man, one giant fall for this astronaut."',e:'🌕'},
+  {q:'"To infinity and beyond!" — Buzz (and yet, here we are)',e:'🚀'},
+  {q:'"Live long and prosper." You did not.',e:'🖖'},
+  {q:'"Houston, we have a problem." And the problem is you fell.',e:'📡'},
+];
+
 function openIntro(n){
-  level = n;
-  document.getElementById('introEyebrow').textContent = `Level ${n+1} of 5`;
-  document.getElementById('introName').textContent = LEVELS[n].name;
-  const m = apod.meta[n];
-  document.getElementById('introApod').textContent = m ? `Backdrop: “${m.title}” — NASA APOD, ${m.date}` : 'Backdrop: procedural starfield';
-  state='intro'; show('introScreen');
+  level=n;
+  eggs.vulcanShown=false;eggs.stayShown=false;
+  const cfg=LEVELS[n];
+  document.getElementById('introEyebrow').textContent=`Level ${n+1} of 10`;
+  document.getElementById('introName').textContent=cfg.name;
+  document.getElementById('introMechanic').textContent=MECHANIC_LABELS[cfg.mechanic]||'';
+  const m=apod.meta[n];
+  document.getElementById('introApod').textContent=m?`Backdrop: "${m.title}" — NASA APOD, ${m.date}`:'Backdrop: procedural starfield';
+  state='intro';show('introScreen');
 }
 
 function pauseGame(){
   state='paused';
-  document.getElementById('pauseStat').innerHTML = `LV ${level+1} &nbsp;·&nbsp; <b>${Math.floor(maxAlt/10)} m</b>`;
+  document.getElementById('pauseStat').innerHTML=`LV ${level+1} &nbsp;·&nbsp; <b>${Math.floor(maxAlt/10)} m</b>`;
   show('pauseScreen');
 }
+
 function failGame(){
   beep(110,0.4,'sawtooth',0.06);
+  // track deaths per level for R2-D2 egg
+  deathsThisLevel=(save.getDeaths(level)||0)+1;
+  save.setDeaths(level,deathsThisLevel);
+  if(deathsThisLevel===3){
+    r2d2Beep();
+    setTimeout(()=>toast('🤖 These aren\'t the platforms you\'re looking for…',3000),600);
+  }
   state='fail';
-  document.getElementById('failStat').innerHTML = `LV ${level+1} &nbsp;·&nbsp; altitude <b>${Math.floor(maxAlt/10)} m</b>`;
+  const q=FAIL_QUOTES[Math.floor(Math.random()*FAIL_QUOTES.length)];
+  document.getElementById('failEyebrow').textContent=q.e+' Signal lost';
+  document.getElementById('failTitle').textContent='RE-ENTRY';
+  document.getElementById('failStat').innerHTML=`LV ${level+1} &nbsp;·&nbsp; altitude <b>${Math.floor(maxAlt/10)} m</b>`;
+  document.getElementById('failQuote').textContent=q.q;
   document.getElementById('hud').classList.remove('show');
   show('failScreen');
 }
-let totalAlt = 0;
+
 function completeLevel(){
-  beep(660,.1); setTimeout(()=>beep(880,.14),100); setTimeout(()=>beep(1100,.2),220);
-  totalAlt += Math.floor(maxAlt/10);
+  beep(660,.1);setTimeout(()=>beep(880,.14),100);setTimeout(()=>beep(1100,.2),220);
+  save.clearDeaths(level);
+  const gained=Math.floor(maxAlt/10);
+  totalAlt+=gained;
+  lifetimeGain+=gained;
+  // check golden unlock
+  const newLifetime=save.lifetimeAlt+gained;
+  save.lifetimeAlt=newLifetime;
+  if(!save.golden&&newLifetime>=10000){
+    save.golden=true;
+    toast('✦ GOLDEN ASTRONAUT UNLOCKED — 10,000 m reached!',4000);
+    infinityJingle();
+    document.getElementById('goldenStatus').style.display='block';
+  }
   document.getElementById('hud').classList.remove('show');
-  if(level === 4){
+  if(level===9){
     state='win';
-    document.getElementById('winStat').innerHTML = `total climb <b>${totalAlt} m</b>`;
+    document.getElementById('winStat').innerHTML=`total climb <b>${totalAlt} m</b> &nbsp;·&nbsp; lifetime <b>${save.lifetimeAlt} m</b>`;
     show('winScreen');
   } else {
     state='clear';
-    document.getElementById('clearTitle').textContent = `LEVEL ${level+1} CLEAR`;
-    document.getElementById('clearStat').innerHTML = `altitude <b>${Math.floor(maxAlt/10)} m</b>`;
+    document.getElementById('clearTitle').textContent=`LEVEL ${level+1} CLEAR`;
+    document.getElementById('clearStat').innerHTML=`altitude <b>${gained} m</b>`;
     show('clearScreen');
   }
 }
 
-/* ---------- wiring ---------- */
-const $ = id => document.getElementById(id);
+/* ── Wiring ── */
+const $=id=>document.getElementById(id);
 
-$('startBtn').onclick = async ()=>{
-  totalAlt = 0;
-  if(settings.controls==='tilt') await enableTilt();
+$('startBtn').onclick=async()=>{
+  totalAlt=0;lifetimeGain=0;
+  if(settings.controls==='tilt')await enableTilt();
   openIntro(0);
 };
-$('settingsBtn').onclick = ()=>{ state='settings'; show('settingsScreen'); };
-$('settingsBack').onclick = ()=>{ state='menu'; show('menuScreen'); };
+$('settingsBtn').onclick=()=>{
+  state='settings';
+  $('goldenStatus').style.display=save.golden?'block':'none';
+  show('settingsScreen');
+};
+$('settingsBack').onclick=()=>{state='menu';show('menuScreen');};
 
-$('controlSeg').addEventListener('click', async e=>{
-  const b = e.target.closest('button'); if(!b) return;
+$('controlSeg').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
   if(b.dataset.mode==='tilt'){
-    const ok = await enableTilt();
-    if(!ok && typeof DeviceOrientationEvent !== 'undefined' &&
-       typeof DeviceOrientationEvent.requestPermission === 'function'){
-      return; // permission denied on iOS, stay on tap
-    }
+    const ok=await enableTilt();
+    if(!ok&&typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')return;
   }
-  settings.controls = b.dataset.mode;
-  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on', c===b));
+  settings.controls=b.dataset.mode;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
 });
-$('soundSeg').addEventListener('click', e=>{
-  const b = e.target.closest('button'); if(!b) return;
-  settings.sound = b.dataset.on==='1';
-  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on', c===b));
+$('soundSeg').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  settings.sound=b.dataset.on==='1';
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
 });
 
-$('introGo').onclick = ()=>{ startLevel(level); };
-$('pauseBtn').onclick = ()=>{ if(state==='playing') pauseGame(); };
-$('resumeBtn').onclick = ()=>{ show(null); setState('playing'); };
-$('pauseMenuBtn').onclick = ()=>{ state='menu'; document.getElementById('hud').classList.remove('show'); show('menuScreen'); };
-$('retryBtn').onclick = ()=>{ openIntro(level); };
-$('failMenuBtn').onclick = ()=>{ state='menu'; show('menuScreen'); };
-$('nextBtn').onclick = ()=>{ openIntro(level+1); };
-$('clearMenuBtn').onclick = ()=>{ state='menu'; show('menuScreen'); };
-$('againBtn').onclick = ()=>{ totalAlt=0; openIntro(0); };
-$('winMenuBtn').onclick = ()=>{ state='menu'; show('menuScreen'); };
+$('introGo').onclick=()=>startLevel(level);
+$('pauseBtn').onclick=()=>{if(state==='playing')pauseGame();};
+$('resumeBtn').onclick=()=>{show(null);setState('playing');};
+$('pauseMenuBtn').onclick=()=>{state='menu';$('hud').classList.remove('show');show('menuScreen');};
+$('retryBtn').onclick=()=>openIntro(level);
+$('failMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
+$('nextBtn').onclick=()=>openIntro(level+1);
+$('clearMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
+$('againBtn').onclick=()=>{totalAlt=0;lifetimeGain=0;openIntro(0);};
+$('winMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
+$('sunBackBtn').onclick=()=>{state='menu';show('menuScreen');};
+
+// Show golden status in settings if earned
+if(save.golden)$('goldenStatus').style.display='block';
 </script>
 </body>
 </html>
