@@ -73,6 +73,16 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 .keybind-btn.listening{border-color:var(--amber);color:var(--amber);animation:pulse .7s infinite alternate}
 @keyframes pulse{from{opacity:.6}to{opacity:1}}
 
+/* Title effects */
+@keyframes titleIn{from{opacity:0;transform:translateY(-12px) skewX(-4deg)}to{opacity:1;transform:none}}
+@keyframes glowPulse{0%,100%{text-shadow:0 0 8px rgba(255,179,64,.3)}50%{text-shadow:0 0 28px rgba(255,179,64,.9),0 0 60px rgba(255,179,64,.35)}}
+@keyframes velShimmer{0%{color:var(--amber)}40%{color:#ffe080}60%{color:var(--cyan)}100%{color:var(--amber)}}
+@keyframes scanFlicker{0%,92%,96%,100%{opacity:1}93%,95%{opacity:0.82}}
+#mainTitle{animation:scanFlicker 8s infinite}
+#mainTitle .letter{display:inline-block;animation:titleIn .4s both}
+#mainTitle .alt{animation:velShimmer 6s ease-in-out infinite,glowPulse 3s ease-in-out infinite}
+#mainTitle .alt .letter{color:inherit}
+
 /* HUD */
 #hud{position:fixed;inset:0;pointer-events:none;z-index:5;display:none}
 #hud.show{display:block}
@@ -115,15 +125,18 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
   opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;text-align:center}
 #toast.show{opacity:1}
 
-/* APOD modal */
-#apodModal{position:fixed;inset:0;background:rgba(5,7,15,.92);backdrop-filter:blur(10px);
-  z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px;gap:14px}
+/* APOD modal — cinematic */
+#apodModal{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end}
 #apodModal.hidden{display:none}
-#apodModal img{max-width:min(400px,90vw);max-height:42vh;object-fit:cover;border:1px solid rgba(92,232,255,.4)}
-#apodModal .apod-body{font-size:12px;line-height:1.7;max-width:360px;opacity:.8;
-  max-height:22vh;overflow-y:auto;text-align:left}
-#apodModal h3{font-family:var(--display);font-size:18px;letter-spacing:.1em;color:var(--cyan)}
+#apodBg{position:absolute;inset:0;background-size:cover;background-position:center;
+  background-color:#05070f}
+#apodBg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(5,7,15,.98) 0%,rgba(5,7,15,.7) 45%,rgba(5,7,15,.15) 100%)}
+#apodContent{position:relative;z-index:1;width:100%;max-width:480px;padding:28px 24px
+  max(24px,env(safe-area-inset-bottom));text-align:center}
+#apodModal .apod-body{font-size:12px;line-height:1.75;opacity:.75;
+  max-height:18vh;overflow-y:auto;text-align:left;margin:0 auto;max-width:400px}
 
 /* install banner */
 #installBanner{position:fixed;bottom:0;left:0;right:0;padding:14px 20px;
@@ -137,20 +150,30 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 #installNo{background:transparent;color:var(--paper);opacity:.6}
 
 /* Level select grid */
-#levelGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
-  max-width:min(360px,90vw);width:100%}
-.lvl-node{position:relative;aspect-ratio:1;border-radius:4px;border:2px solid rgba(238,241,255,.2);
-  background:rgba(11,14,26,.7);cursor:pointer;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:2px;transition:border-color .15s,background .15s;
-  touch-action:auto;padding:4px}
-.lvl-node.unlocked{border-color:rgba(92,232,255,.45);cursor:pointer}
-.lvl-node.unlocked:active{background:rgba(92,232,255,.12)}
-.lvl-node.completed{border-color:var(--amber);background:rgba(255,179,64,.08)}
-.lvl-node.locked{opacity:.35;cursor:default}
-.lvl-node .lvl-num{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:.05em}
-.lvl-node .lvl-best{font-size:8px;letter-spacing:.08em;opacity:.6;text-transform:uppercase;line-height:1.2;text-align:center}
-.lvl-node .lvl-check{position:absolute;top:3px;right:4px;font-size:10px;color:var(--amber)}
-.lvl-node.current-sel{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan)}
+#levelGrid{display:flex;flex-direction:column;gap:10px;
+  max-width:min(360px,92vw);width:100%;max-height:65vh;overflow-y:auto;padding:2px}
+.world-row{border:1px solid rgba(238,241,255,.12);border-radius:4px;overflow:hidden}
+.world-header{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:rgba(11,14,26,.8);border-bottom:1px solid rgba(238,241,255,.08)}
+.world-icon{font-size:18px;line-height:1}
+.world-info{flex:1;min-width:0}
+.world-name{font-family:var(--display);font-size:13px;letter-spacing:.12em}
+.world-sub{font-size:10px;opacity:.5;letter-spacing:.08em;margin-top:1px}
+.world-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.lvl-node{position:relative;border-right:1px solid rgba(238,241,255,.08);
+  background:rgba(11,14,26,.6);cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;transition:background .12s;
+  touch-action:auto;padding:10px 4px}
+.lvl-node:last-child{border-right:none}
+.lvl-node.unlocked:active,.lvl-node.unlocked:hover{background:rgba(92,232,255,.1)}
+.lvl-node.completed{background:rgba(255,179,64,.07)}
+.lvl-node.locked{opacity:.3;cursor:default}
+.world-row.world-locked .world-header{opacity:.4}
+.lvl-node .lvl-num{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.06em}
+.lvl-node .lvl-name{font-size:8px;letter-spacing:.04em;opacity:.55;text-align:center;
+  line-height:1.3;max-width:80px;text-transform:uppercase}
+.lvl-node .lvl-best{font-size:8px;letter-spacing:.06em;opacity:.7;color:var(--amber)}
+.lvl-node .lvl-check{position:absolute;top:4px;right:5px;font-size:9px;color:var(--amber)}
 
 /* golden skin shimmer */
 @keyframes goldShimmer{0%,100%{filter:hue-rotate(0deg) brightness(1.1)}
@@ -190,11 +213,14 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 <!-- MAIN MENU -->
 <div class="overlay" id="menuScreen">
   <div class="eyebrow">Nobody Studios presents</div>
-  <h1 id="mainTitle">ESCAPE<br><span class="alt">VELOCITY</span></h1>
-  <p class="sub" id="menuSub">Ten climbs from low orbit to the edge of everything. Shoot debris, dodge what you can't, reach each checkpoint.</p>
-  <button class="btn accent" id="startBtn">New Game</button>
-  <button class="btn ghost" id="lvlSelBtn">Level Select</button>
-  <button class="btn ghost" id="settingsBtn">Settings</button>
+  <h1 id="mainTitle"></h1>
+  <p class="sub" id="menuSub">Five worlds. Fifteen levels. Low orbit to the edge of everything. Shoot debris, dodge what you can't, reach each checkpoint.</p>
+  <button class="btn accent" id="startBtn" style="min-width:260px">New Game</button>
+  <div style="display:flex;gap:10px;width:min(260px,80vw)">
+    <button class="btn ghost" id="lvlSelBtn" style="flex:1;min-width:0;font-size:14px;padding:13px 10px">Level Select</button>
+    <button class="btn ghost" id="settingsBtn" style="flex:1;min-width:0;font-size:14px;padding:13px 10px">Settings</button>
+  </div>
+  <button class="btn ghost" id="fullscreenBtn" style="min-width:120px;font-size:11px;padding:8px 16px;opacity:.45;letter-spacing:.1em">⛶ fullscreen</button>
   <p class="note" id="nasaStatus">Contacting NASA archive&hellip;</p>
 </div>
 
@@ -261,7 +287,7 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 <!-- LEVEL INTRO -->
 <div class="overlay hidden" id="introScreen">
   <div class="card">
-    <div class="eyebrow" id="introEyebrow">Level 1 of 10</div>
+    <div class="eyebrow" id="introEyebrow">World 1 · Level 1 of 3</div>
     <h2 id="introName">LOW EARTH ORBIT</h2>
     <div class="mechanic-tag" id="introMechanic"></div>
     <div class="apod-title" id="introApod"></div>
@@ -292,30 +318,27 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
   <div class="eyebrow">Checkpoint reached</div>
   <h2 id="clearTitle">LEVEL 1 CLEAR</h2>
   <div class="stat" id="clearStat"></div>
-  <div id="clearApod" class="hidden" style="max-width:min(340px,90vw);text-align:left">
-    <img id="clearApodImg" src="" alt="" style="width:100%;max-height:180px;object-fit:cover;
-      border:1px solid rgba(92,232,255,.4);border-radius:2px;display:block">
-    <div style="padding:10px 0 2px">
-      <div style="font-size:10px;letter-spacing:.25em;color:var(--cyan);text-transform:uppercase;margin-bottom:4px">NASA Astronomy Picture of the Day</div>
-      <div id="clearApodTitle" style="font-family:var(--display);font-size:14px;letter-spacing:.06em;line-height:1.4"></div>
-      <div id="clearApodDate" style="font-size:10px;opacity:.5;margin-top:3px;letter-spacing:.1em"></div>
-    </div>
-  </div>
+  <button class="btn ghost apod-cta hidden" id="clearApodBtn" style="min-width:0;font-size:12px;padding:10px 18px;color:var(--cyan);border-color:rgba(92,232,255,.4)">🔭 Check this out — NASA APOD</button>
   <button class="btn accent" id="nextBtn">Next Level</button>
   <button class="btn ghost" id="clearMenuBtn">Main Menu</button>
+</div>
+
+<!-- WORLD COMPLETE -->
+<div class="overlay hidden" id="worldClearScreen">
+  <div class="eyebrow" id="wcEyebrow">World 1 complete</div>
+  <h2 id="wcTitle" style="font-size:28px">WORLD 1<br>CLEARED</h2>
+  <div class="stat" id="wcStat"></div>
+  <button class="btn ghost apod-cta hidden" id="wcApodBtn" style="min-width:0;font-size:12px;padding:10px 18px;color:var(--cyan);border-color:rgba(92,232,255,.4)">🔭 Check this out — NASA APOD</button>
+  <button class="btn accent" id="wcNextBtn">Enter World <span id="wcNextNum">2</span></button>
+  <button class="btn ghost" id="wcMenuBtn">Main Menu</button>
 </div>
 
 <!-- GAME COMPLETE -->
 <div class="overlay hidden" id="winScreen">
   <div class="eyebrow">You made it</div>
   <h2>ESCAPE<br>VELOCITY</h2>
-  <div id="winApod" class="hidden" style="max-width:min(340px,90vw)">
-    <img id="winApodImg" src="" alt="" style="width:100%;max-height:160px;object-fit:cover;
-      border:1px solid rgba(255,179,64,.4);border-radius:2px;display:block">
-    <div id="winApodTitle" style="font-family:var(--display);font-size:12px;letter-spacing:.06em;
-      color:var(--amber);margin-top:8px;line-height:1.4"></div>
-  </div>
-  <p class="sub">Ten checkpoints cleared. The universe is behind you. Nobody saw it. Trust Nobody.</p>
+  <button class="btn ghost apod-cta hidden" id="winApodBtn" style="min-width:0;font-size:12px;padding:10px 18px;color:var(--amber);border-color:rgba(255,179,64,.4)">🔭 Today's NASA Picture of the Universe</button>
+  <p class="sub">Five worlds. Fifteen levels. The void is behind you. Nobody saw you do it. Trust Nobody.</p>
   <div class="stat" id="winStat"></div>
   <button class="btn accent" id="againBtn">Play Again</button>
   <button class="btn ghost" id="winMenuBtn">Main Menu</button>
@@ -330,12 +353,22 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
   <button class="btn accent" id="sunBackBtn">Back to Safety</button>
 </div>
 
-<!-- APOD MODAL -->
+<!-- APOD MODAL — cinematic fullscreen -->
 <div id="apodModal" class="hidden">
-  <img id="apodImg" src="" alt="">
-  <h3 id="apodModalTitle"></h3>
-  <p class="apod-body" id="apodModalBody"></p>
-  <button class="btn ghost" id="apodClose">Close</button>
+  <div id="apodBg"></div>
+  <div id="apodContent">
+    <div class="eyebrow" style="color:var(--cyan);margin-bottom:8px">🔭 NASA Astronomy Picture of the Day</div>
+    <h3 id="apodModalTitle" style="font-family:var(--display);font-size:clamp(18px,5vw,28px);letter-spacing:.06em;line-height:1.2;margin-bottom:6px"></h3>
+    <div id="apodModalMeta" style="font-size:11px;opacity:.55;letter-spacing:.1em;margin-bottom:14px"></div>
+    <p class="apod-body" id="apodModalBody"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center">
+      <a id="apodNasaLink" href="#" target="_blank" rel="noopener"
+         style="font-family:var(--display);font-size:13px;letter-spacing:.1em;color:var(--cyan);
+         border:1px solid rgba(92,232,255,.4);padding:10px 20px;border-radius:3px;text-decoration:none;
+         text-transform:uppercase">View on NASA ↗</a>
+      <button class="btn ghost" id="apodClose" style="min-width:0;padding:10px 20px;font-size:13px">Close</button>
+    </div>
+  </div>
 </div>
 
 <!-- TOAST -->
@@ -416,31 +449,79 @@ function fit(){
 }
 addEventListener('resize',fit);fit();
 
-/* ── 10 Level definitions ──
-   mechanic: 'normal'|'heavy-grav'|'ghost'|'low-grav'|'wormhole'|'ring-bands'|'mirror'|'speed'|'chaos'|'event-horizon'
+/* ── World + Level structure ──
+   5 worlds × 3 levels. Flat index = world*3 + levelInWorld (0-14).
+   LEVELS is a flat array for backwards compat with all game code.
+   mechanic: 'normal'|'heavy-grav'|'ghost'|'low-grav'|'wormhole'|'ring-bands'|'event-horizon'
 */
-const LEVELS=[
-  {name:'LOW EARTH ORBIT',   mechanic:'normal',       goal:2600,gap:[58,88], moving:0.00,brittle:0.05,spring:0.07,tint:'#1b2a52',star:'#9fc4ff',hazard:0.05,hazType:'satellite',bh:0,
-   desc:'Standard orbit. Satellites orbit too — watch for debris.'},
-  {name:'LUNAR PASSAGE',     mechanic:'normal',       goal:3200,gap:[66,96], moving:0.10,brittle:0.10,spring:0.07,tint:'#2a2a38',star:'#d8d8e8',hazard:0.08,hazType:'satellite',bh:0,
-   desc:'Earth recedes. Moving platforms and satellite density increases.'},
-  {name:'MARS CORRIDOR',     mechanic:'normal',       goal:3800,gap:[72,102],moving:0.18,brittle:0.14,spring:0.06,tint:'#3a1f22',star:'#ffb29a',hazard:0.10,hazType:'asteroid', bh:0,
-   desc:'Red dust. Asteroids replace satellites. More brittle ice platforms.'},
-  {name:'SATURN\'S RINGS',   mechanic:'ring-bands',   goal:4200,gap:[74,98], moving:0.20,brittle:0.12,spring:0.07,tint:'#2a2218',star:'#ffd9a0',hazard:0.08,hazType:'asteroid', bh:0,
-   desc:'Horizontal ice-ring bands scroll across the screen. Time your crossings.'},
-  {name:'TITAN\'S DESCENT',  mechanic:'heavy-grav',   goal:4600,gap:[62,88], moving:0.22,brittle:0.16,spring:0.10,tint:'#2e1a00',star:'#ffb060',hazard:0.12,hazType:'asteroid', bh:0,
-   desc:'Titan\'s thick atmosphere. Gravity is 40% heavier. Springs help.'},
-  {name:'JOVIAN STORM',      mechanic:'normal',       goal:5000,gap:[78,108],moving:0.25,brittle:0.18,spring:0.06,tint:'#33240f',star:'#ffd9a0',hazard:0.14,hazType:'asteroid', bh:0,
-   desc:'Storm bands and dense asteroid fields. Fast moving platforms.'},
-  {name:'VOYAGER GRAVEYARD', mechanic:'ghost',        goal:5400,gap:[80,110],moving:0.22,brittle:0.20,spring:0.07,tint:'#1a1a2e',star:'#a8c8ff',hazard:0.10,hazType:'satellite',bh:0.02,
-   desc:'Ghost platforms fade in and out. Land fast — they won\'t wait.'},
-  {name:'INTERSTELLAR VOID', mechanic:'low-grav',     goal:5800,gap:[90,130],moving:0.15,brittle:0.22,spring:0.05,tint:'#120b26',star:'#c9a8ff',hazard:0.08,hazType:'asteroid', bh:0.03,
-   desc:'Near-zero gravity. Floaty physics. Wormhole pads teleport you upward.'},
-  {name:'DARK MATTER REEF',  mechanic:'wormhole',     goal:6200,gap:[85,115],moving:0.28,brittle:0.20,spring:0.08,tint:'#0a0a1f',star:'#8888ff',hazard:0.12,hazType:'asteroid', bh:0.04,
-   desc:'Wormholes scatter across the reef. Jump in — you won\'t know where you\'ll land.'},
-  {name:'EVENT HORIZON',     mechanic:'event-horizon',goal:7000,gap:[86,116],moving:0.30,brittle:0.24,spring:0.05,tint:'#05020f',star:'#c9a8ff',hazard:0.10,hazType:'asteroid', bh:0.08,
-   desc:'Everything bends. Black holes everywhere. This is the end of the map.'},
+const WORLDS=[
+  {
+    num:1,name:'LOW ORBIT',subtitle:'Learn to fly',
+    tint:'#1b2a52',accent:'#5ce8ff',icon:'🛰️',
+    levels:[
+      {name:'First Ascent',      mechanic:'normal',       goal:2000,gap:[55,80], moving:0.00,brittle:0.00,spring:0.08,tint:'#1b2a52',star:'#9fc4ff',hazard:0.00,hazType:'satellite',bh:0,
+       desc:'Clean skies. Get a feel for the jump arc.'},
+      {name:'Debris Field',      mechanic:'normal',       goal:2400,gap:[60,86], moving:0.08,brittle:0.06,spring:0.08,tint:'#1e2f5a',star:'#9fc4ff',hazard:0.06,hazType:'satellite',bh:0,
+       desc:'First satellites appear. Shoot or dodge.'},
+      {name:'Orbital Decay',     mechanic:'normal',       goal:2800,gap:[66,92], moving:0.14,brittle:0.10,spring:0.07,tint:'#1a2848',star:'#8bb8ff',hazard:0.10,hazType:'satellite',bh:0,
+       desc:'More moving platforms. Dense satellite traffic.'},
+    ]
+  },
+  {
+    num:2,name:'LUNAR BELT',subtitle:'The moon has no mercy',
+    tint:'#2a2a38',accent:'#d8d8e8',icon:'🌑',
+    levels:[
+      {name:'Lunar Approach',    mechanic:'normal',       goal:2800,gap:[68,96], moving:0.16,brittle:0.12,spring:0.07,tint:'#2a2a38',star:'#d8d8e8',hazard:0.08,hazType:'satellite',bh:0,
+       desc:'Pale terrain. Moving platforms pick up speed.'},
+      {name:'Ice Shelf',         mechanic:'normal',       goal:3200,gap:[72,100],moving:0.20,brittle:0.22,spring:0.06,tint:'#252535',star:'#c8c8e0',hazard:0.10,hazType:'asteroid', bh:0,
+       desc:'Brittle ice platforms — land once and they\'re gone.'},
+      {name:'Mare Tranquility',  mechanic:'ring-bands',   goal:3600,gap:[68,96], moving:0.18,brittle:0.14,spring:0.08,tint:'#222230',star:'#b8b8d8',hazard:0.08,hazType:'asteroid', bh:0,
+       desc:'Ring bands debut. Time your crossings or get swept.'},
+    ]
+  },
+  {
+    num:3,name:'STORM ZONE',subtitle:'Hold on',
+    tint:'#33240f',accent:'#ffb340',icon:'🪐',
+    levels:[
+      {name:'Saturn Approach',   mechanic:'ring-bands',   goal:3600,gap:[72,100],moving:0.22,brittle:0.14,spring:0.07,tint:'#2a2218',star:'#ffd9a0',hazard:0.10,hazType:'asteroid', bh:0,
+       desc:'Ring bands thicken. Faster scroll, tighter gaps.'},
+      {name:'Titan\'s Pull',     mechanic:'heavy-grav',   goal:4000,gap:[60,84], moving:0.24,brittle:0.18,spring:0.12,tint:'#2e1a00',star:'#ffb060',hazard:0.12,hazType:'asteroid', bh:0,
+       desc:'Gravity up 40%. Springs are your best friend.'},
+      {name:'Jovian Storm',      mechanic:'normal',       goal:4400,gap:[76,106],moving:0.28,brittle:0.20,spring:0.06,tint:'#33240f',star:'#ffd9a0',hazard:0.16,hazType:'asteroid', bh:0,
+       desc:'Asteroid density peaks. Fast everything.'},
+    ]
+  },
+  {
+    num:4,name:'DEEP DARK',subtitle:'Trust nothing',
+    tint:'#1a1a2e',accent:'#c9a8ff',icon:'👻',
+    levels:[
+      {name:'Voyager Graveyard', mechanic:'ghost',        goal:4400,gap:[78,108],moving:0.20,brittle:0.18,spring:0.07,tint:'#1a1a2e',star:'#a8c8ff',hazard:0.10,hazType:'satellite',bh:0.02,
+       desc:'Ghost platforms fade in and out. Land while solid.'},
+      {name:'Interstellar Void', mechanic:'low-grav',     goal:4800,gap:[90,130],moving:0.14,brittle:0.22,spring:0.05,tint:'#120b26',star:'#c9a8ff',hazard:0.08,hazType:'asteroid', bh:0.03,
+       desc:'Near-zero gravity. Floaty, drifty, unforgiving.'},
+      {name:'Dark Matter Reef',  mechanic:'wormhole',     goal:5200,gap:[84,114],moving:0.26,brittle:0.20,spring:0.08,tint:'#0a0a1f',star:'#8888ff',hazard:0.12,hazType:'asteroid', bh:0.04,
+       desc:'Wormholes and black holes. Stay sharp.'},
+    ]
+  },
+  {
+    num:5,name:'THE VOID',subtitle:'No way back',
+    tint:'#05020f',accent:'#ff5c7a',icon:'⚫',
+    levels:[
+      {name:'Edge of Everything', mechanic:'ghost',       goal:5200,gap:[82,112],moving:0.28,brittle:0.24,spring:0.06,tint:'#0c0818',star:'#c9a8ff',hazard:0.14,hazType:'asteroid', bh:0.05,
+       desc:'Ghost platforms, wormholes, and black holes collide.'},
+      {name:'Singularity',        mechanic:'wormhole',    goal:5600,gap:[84,114],moving:0.30,brittle:0.26,spring:0.05,tint:'#08040f',star:'#a888ff',hazard:0.12,hazType:'asteroid', bh:0.07,
+       desc:'Maximum black hole density. Wormholes are your only salvation.'},
+      {name:'Event Horizon',      mechanic:'event-horizon',goal:6200,gap:[86,116],moving:0.32,brittle:0.28,spring:0.05,tint:'#05020f',star:'#c9a8ff',hazard:0.10,hazType:'asteroid',bh:0.09,
+       desc:'This is the end of the map. Everything bends.'},
+    ]
+  },
 ];
+
+// Flat array for all game logic
+const LEVELS=WORLDS.flatMap(w=>w.levels);
+function levelWorld(idx){return Math.floor(idx/3);}
+function levelInWorld(idx){return idx%3;}
+function levelLabel(idx){const w=levelWorld(idx),l=levelInWorld(idx);return `${w+1}-${l+1}`;}
 
 const MECHANIC_LABELS={
   'normal':'Standard',
@@ -462,7 +543,7 @@ async function loadAPOD(){
     const res=await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_KEY}&count=12&thumbs=true`);
     if(!res.ok)throw new Error(res.status);
     const data=await res.json();
-    const pics=data.filter(d=>d.media_type==='image'||d.thumbnail_url).slice(0,10);
+    const pics=data.filter(d=>d.media_type==='image'||d.thumbnail_url).slice(0,15);
     let loaded=0;
     pics.forEach((p,i)=>{
       apod.meta[i]=p;
@@ -773,19 +854,29 @@ document.getElementById('menuSub').addEventListener('pointerup',e=>{
   }
 });
 
-/* ── APOD credit tap ── */
-document.getElementById('credit').addEventListener('click',()=>{
-  const m=apod.meta[level];
+/* ── APOD modal — open with any level index ── */
+function openApodModal(levelIdx){
+  const m=apod.meta[levelIdx];
   if(!m)return;
-  const modal=document.getElementById('apodModal');
-  document.getElementById('apodModalTitle').textContent=m.title||'';
+  const imgUrl=m.url&&!m.url.includes('youtube')?m.url:(m.thumbnail_url||'');
+  // Background
+  document.getElementById('apodBg').style.backgroundImage=imgUrl?`url(${imgUrl})`:'none';
+  // Content
+  document.getElementById('apodModalTitle').textContent=m.title||'Untitled';
+  const credit=[m.date, m.copyright?'© '+m.copyright.trim():''].filter(Boolean).join(' · ');
+  document.getElementById('apodModalMeta').textContent=credit;
+  // Explanation — truncate to ~400 chars for readability, full on scroll
   document.getElementById('apodModalBody').textContent=m.explanation||'';
-  const img=document.getElementById('apodImg');
-  img.src=m.url&&!m.url.includes('youtube')?m.url:(m.thumbnail_url||'');
-  img.style.display=img.src?'block':'none';
-  modal.classList.remove('hidden');
-});
+  // NASA link
+  const link=document.getElementById('apodNasaLink');
+  link.href=`https://apod.nasa.gov/apod/ap${(m.date||'').replace(/-/g,'').slice(2)}.html`;
+  link.style.display=m.date?'inline-block':'none';
+  document.getElementById('apodModal').classList.remove('hidden');
+}
 document.getElementById('apodClose').onclick=()=>document.getElementById('apodModal').classList.add('hidden');
+
+/* ── Credit tap opens modal for current level ── */
+document.getElementById('credit').addEventListener('click',()=>openApodModal(level));
 
 /* ── Shoot button (mobile) ── */
 const shootBtn=document.getElementById('shootBtn');
@@ -891,11 +982,9 @@ function tickMenuBg(){
 }
 function drawMenuBg(){
   ctx.fillStyle='#05070f';ctx.fillRect(0,0,W,H);
-  // deep space gradient
   const g=ctx.createLinearGradient(0,0,0,H);
   g.addColorStop(0,'#0d1535');g.addColorStop(1,'#05070f');
   ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-  // stars
   for(const s of stars){
     const sy=(s.y+menuBg.cam*0.12*s.d)%H;
     const tw=0.4+0.6*Math.sin(s.p+performance.now()/900);
@@ -903,7 +992,6 @@ function drawMenuBg(){
     ctx.fillRect(s.x,sy<0?sy+H:sy,s.r,s.r);
   }
   ctx.globalAlpha=1;
-  // platforms
   for(const p of menuBg.platforms){
     ctx.globalAlpha=0.45;ctx.fillStyle='#eef1ff';
     ctx.fillRect(p.x,p.y,p.w,p.h);
@@ -911,13 +999,11 @@ function drawMenuBg(){
     ctx.fillRect(p.x,p.y+p.h-3,p.w,3);
     ctx.globalAlpha=1;
   }
-  // particles
   for(const pt of menuBg.particles){
     ctx.globalAlpha=pt.life/18*0.6;ctx.fillStyle=pt.color;
     ctx.fillRect(pt.x,pt.y,2,2);
   }
   ctx.globalAlpha=1;
-  // astronaut (semi-transparent, dreamy)
   ctx.globalAlpha=0.55;
   drawAstronaut(menuBg.astronaut.x,menuBg.astronaut.y,menuBg.astronaut.face,menuBg.astronaut.vy);
   ctx.globalAlpha=1;
@@ -939,14 +1025,33 @@ let totalAlt=0;
 let lifetimeGain=0;           // added this session
 
 /* ── Platform / hazard spawners ── */
+let _consecutiveNonSolid=0; // reset each startLevel
+
 function spawnPlatform(y,cfg){
+  // Cap gap to 105px max so a jump always clears worst-case
+  // (this is called from the while loop which already uses cfg.gap,
+  //  but we defensively ensure the platform is reachable)
+
   const r=Math.random();
   let type='solid';
-  if(r<cfg.moving)type='moving';
-  else if(r<cfg.moving+cfg.brittle)type='brittle';
-  const ghost=cfg.mechanic==='ghost'&&type==='solid'&&Math.random()<0.45;
-  return{x:rand(10,W-80),y,w:68,h:14,type,vx:type==='moving'?(Math.random()<.5?-1:1)*rand(1,1.8):0,
-    spring:Math.random()<cfg.spring,broken:false,ghost,ghostPhase:Math.random()*Math.PI*2,ghostVis:1};
+
+  // Force solid after 2 consecutive non-solid platforms
+  if(_consecutiveNonSolid<2){
+    if(r<cfg.moving) type='moving';
+    else if(r<cfg.moving+cfg.brittle) type='brittle';
+  }
+
+  if(type==='solid') _consecutiveNonSolid=0;
+  else _consecutiveNonSolid++;
+
+  // Ghost only on solid, and max 40% chance (down from 45%)
+  // Also reset ghost streak tracking via the same counter
+  const ghost=cfg.mechanic==='ghost'&&type==='solid'&&_consecutiveNonSolid===0&&Math.random()<0.40;
+
+  return{x:rand(10,W-80),y,w:68,h:14,type,
+    vx:type==='moving'?(Math.random()<.5?-1:1)*rand(1,1.8):0,
+    spring:Math.random()<cfg.spring,broken:false,ghost,
+    ghostPhase:Math.random()*Math.PI*2,ghostVis:1};
 }
 
 function spawnHazard(y,cfg){
@@ -982,19 +1087,30 @@ function startLevel(n){
   level=n;
   const cfg=LEVELS[n];
   platforms=[];particles=[];hazards=[];bullets=[];ringBands=[];wormholes=[];
-  shootCd=0;ghostTimer=0;sunMeltTimer=0;
+  shootCd=0;ghostTimer=0;sunMeltTimer=0;_consecutiveNonSolid=0;
 
   // gravity mod
   gravMult=cfg.mechanic==='heavy-grav'?1.4:cfg.mechanic==='low-grav'?0.42:1;
 
-  // starting safe platform
+  // ── Guaranteed starting ladder (5 solid platforms, alternating sides) ──
+  // Player spawns at H-90 with vy=-13.2 (~200px reach).
+  // Each rung is 64-72px above the last — always reachable.
+  const LADDER_RUNGS=5;
+  const LADDER_GAP=68;
+  const sides=[W*0.18, W*0.55, W*0.22, W*0.60, W*0.28]; // alternating x positions
   let y=H-40;
-  platforms.push({x:W/2-50,y,w:100,h:14,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1});
-
+  // Ground platform — wide, centered
+  platforms.push({x:W/2-60,y,w:120,h:14,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1});
+  for(let r=0;r<LADDER_RUNGS;r++){
+    y-=LADDER_GAP;
+    platforms.push({x:sides[r],y,w:88,h:14,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1});
+  }
+  // Resume random generation above the ladder, no hazards until 500px up
   while(y>-H*1.5){
-    y-=rand(cfg.gap[0],cfg.gap[1]);
+    const _initGap=Math.min(cfg.gap[1],105);
+    y-=rand(cfg.gap[0],_initGap);
     platforms.push(spawnPlatform(y,cfg));
-    if(y<H-400)spawnHazard(y,cfg);
+    if(y<H-500)spawnHazard(y,cfg);
     if(cfg.mechanic==='wormhole'&&Math.random()<0.09)spawnWormhole(y-40);
   }
 
@@ -1003,7 +1119,7 @@ function startLevel(n){
   player={x:W/2-16,y:H-90,w:32,h:38,vx:0,vy:-13.2,face:1};
   cam=0;maxAlt=0;levelDone=false;finishPad=null;
 
-  document.getElementById('lvlTag').textContent=`LV ${n+1}`;
+  document.getElementById('lvlTag').textContent=`W${levelWorld(n)+1}-${levelInWorld(n)+1}`;
   document.getElementById('tapHint').style.display='flex';
   document.getElementById('hintL').style.visibility=settings.controls==='tap'?'visible':'hidden';
   document.getElementById('hintR').style.visibility=settings.controls==='tap'?'visible':'hidden';
@@ -1159,22 +1275,16 @@ function update(){
     maxAlt=Math.max(maxAlt,cam);
   }
 
-  // spawn ahead — keep at least 300px of platforms above viewport
-  let _ps=platforms.filter(p=>!p.broken);
-  let topY=_ps.length?Math.min(..._ps.map(p=>p.y)):H*0.4;
+  // spawn ahead — use ALL platform positions (including broken) so gaps don't stack
+  let topY=platforms.length?Math.min(...platforms.map(p=>p.y)):H*0.4;
   while(topY>-300){
-    topY-=rand(cfg.gap[0],cfg.gap[1]);
+    const _maxGap=Math.min(cfg.gap[1],105); // never wider than jump can reliably cross
+    topY-=rand(cfg.gap[0],_maxGap);
     const altHere=maxAlt+(H*0.42-topY);
     if(altHere>=cfg.goal&&!finishPad){
       // place finish pad
       finishPad={x:W/2-70,y:topY,w:140,h:18,type:'finish',vx:0,spring:false,broken:false,ghost:false,ghostVis:1};
       platforms.push(finishPad);
-      // guarantee 3 solid platforms below the finish so player can reach it
-      let bufY=topY;
-      for(let i=0;i<3;i++){
-        bufY+=rand(cfg.gap[0]*0.7,cfg.gap[0]);
-        if(bufY<H+200) platforms.push({x:rand(10,W-80),y:bufY,w:78,h:14,type:'solid',vx:0,spring:false,broken:false,ghost:false,ghostVis:1});
-      }
       levelDone=true;
       break;
     } else {
@@ -1193,6 +1303,8 @@ function update(){
 
   // fall = fail
   if(player.y>H+60){failGame();return;}
+  // ceiling fail — if finishPad placed and player flies past it without landing
+  if(finishPad&&player.y<finishPad.y-280){failGame();return;}
 
   // HUD
   document.getElementById('altTag').textContent=Math.floor(maxAlt/10)+' m';
@@ -1480,29 +1592,71 @@ function buildLevelGrid(){
   const grid=document.getElementById('levelGrid');
   grid.innerHTML='';
   const furthest=save.furthestLevel;
-  LEVELS.forEach((cfg,i)=>{
-    const node=document.createElement('div');
-    const completed=i<furthest;
-    const unlocked=i<=furthest;
-    const locked=!unlocked;
-    node.className='lvl-node'+(completed?' completed':unlocked?' unlocked':' locked');
-    const best=save.getBest(i);
-    node.innerHTML=`<span class="lvl-num">${i+1}</span><span class="lvl-best">${best?Math.floor(best/10)+'m':cfg.name.split(' ')[0].slice(0,5)}</span>${completed?'<span class="lvl-check">✓</span>':''}`;
-    node.title=cfg.name+(best?' — best: '+Math.floor(best/10)+'m':'');
-    if(!locked){
-      node.addEventListener('pointerup',e=>{
-        e.stopPropagation();sndClick();
-        totalAlt=0;lifetimeGain=0;
-        openIntro(i);
-      });
-    }
-    grid.appendChild(node);
+  WORLDS.forEach((world,wi)=>{
+    const worldStartIdx=wi*3;
+    const worldUnlocked=worldStartIdx<=furthest;
+    const worldCompleted=worldStartIdx+3<=furthest;
+    const row=document.createElement('div');
+    row.className='world-row'+(worldUnlocked?'':' world-locked');
+    row.style.borderColor=worldUnlocked?world.accent+'44':'rgba(238,241,255,.08)';
+    row.innerHTML=`<div class="world-header">
+      <span class="world-icon">${world.icon}</span>
+      <div class="world-info">
+        <div class="world-name" style="color:${worldUnlocked?world.accent:'inherit'}">${world.name}</div>
+        <div class="world-sub">${worldUnlocked?world.subtitle:'Locked'}</div>
+      </div>
+      ${worldCompleted?'<span style="color:var(--amber);font-size:13px">✓</span>':''}
+    </div>
+    <div class="world-levels"></div>`;
+    const levelContainer=row.querySelector('.world-levels');
+    world.levels.forEach((cfg,li)=>{
+      const i=worldStartIdx+li;
+      const completed=i<furthest;
+      const unlocked=i<=furthest&&worldUnlocked;
+      const node=document.createElement('div');
+      node.className='lvl-node'+(completed?' completed':unlocked?' unlocked':' locked');
+      const best=save.getBest(i);
+      node.innerHTML=`${completed?'<span class="lvl-check">✓</span>':''}
+        <span class="lvl-num" style="color:${completed?world.accent:unlocked?'var(--paper)':'inherit'}">${wi+1}-${li+1}</span>
+        <span class="lvl-name">${cfg.name}</span>
+        ${best?`<span class="lvl-best">${Math.floor(best/10)}m</span>`:''}`;
+      if(unlocked){
+        node.addEventListener('pointerup',e=>{
+          e.stopPropagation();sndClick();
+          totalAlt=0;lifetimeGain=0;
+          openIntro(i);
+        });
+      }
+      levelContainer.appendChild(node);
+    });
+    grid.appendChild(row);
   });
 }
 
+/* ── Animated title ── */
+function buildTitle(){
+  const el=document.getElementById('mainTitle');
+  const words=[{text:'ESCAPE',cls:''},{text:'VELOCITY',cls:'alt'}];
+  el.innerHTML='';
+  words.forEach((w,wi)=>{
+    const span=document.createElement('span');
+    span.className=w.cls;
+    [...w.text].forEach((ch,ci)=>{
+      const l=document.createElement('span');
+      l.className='letter';
+      l.textContent=ch;
+      l.style.animationDelay=(wi*0.3+ci*0.06)+'s';
+      span.appendChild(l);
+    });
+    el.appendChild(span);
+    if(wi===0)el.appendChild(document.createElement('br'));
+  });
+}
+buildTitle();
+
 /* ── Screen management ── */
 const SCREENS=['menuScreen','settingsScreen','introScreen','pauseScreen','failScreen',
-               'clearScreen','winScreen','sunScreen','howToScreen','levelSelectScreen'];
+               'clearScreen','winScreen','sunScreen','howToScreen','levelSelectScreen','worldClearScreen'];
 function show(id){
   SCREENS.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));
   if(!id)SCREENS.forEach(s=>document.getElementById(s).classList.add('hidden'));
@@ -1529,7 +1683,7 @@ function openIntro(n){
   level=n;
   eggs.vulcanShown=false;eggs.stayShown=false;
   const cfg=LEVELS[n];
-  document.getElementById('introEyebrow').textContent=`Level ${n+1} of 10`;
+  document.getElementById('introEyebrow').textContent=`World ${levelWorld(n)+1} · Level ${levelInWorld(n)+1} of 3`;
   document.getElementById('introName').textContent=cfg.name;
   document.getElementById('introMechanic').textContent=MECHANIC_LABELS[cfg.mechanic]||'';
   const m=apod.meta[n];
@@ -1541,7 +1695,7 @@ function openIntro(n){
 
 function pauseGame(){
   state='paused';
-  document.getElementById('pauseStat').innerHTML=`LV ${level+1} &nbsp;·&nbsp; <b>${Math.floor(maxAlt/10)} m</b>`;
+  document.getElementById('pauseStat').innerHTML=`W${levelWorld(level)+1}-${levelInWorld(level)+1} &nbsp;·&nbsp; <b>${Math.floor(maxAlt/10)} m</b>`;
   show('pauseScreen');
 }
 
@@ -1558,7 +1712,7 @@ function failGame(){
   const q=FAIL_QUOTES[Math.floor(Math.random()*FAIL_QUOTES.length)];
   document.getElementById('failEyebrow').textContent=q.e+' Signal lost';
   document.getElementById('failTitle').textContent='RE-ENTRY';
-  document.getElementById('failStat').innerHTML=`LV ${level+1} &nbsp;·&nbsp; altitude <b>${Math.floor(maxAlt/10)} m</b>`;
+  document.getElementById('failStat').innerHTML=`W${levelWorld(level)+1}-${levelInWorld(level)+1} &nbsp;·&nbsp; altitude <b>${Math.floor(maxAlt/10)} m</b>`;
   document.getElementById('failQuote').textContent=q.q;
   document.getElementById('hud').classList.remove('show');
   show('failScreen');
@@ -1583,34 +1737,38 @@ function completeLevel(){
     document.getElementById('goldenStatus').style.display='block';
   }
   document.getElementById('hud').classList.remove('show');
-  // Populate APOD card for this level
   const apodMeta=apod.meta[level];
-  const apodImg=apod.images[level];
-  if(level===9){
+  const hasApod=!!(apodMeta&&(apodMeta.url||apodMeta.thumbnail_url));
+  const isLastLevel=level===14;
+  const isWorldEnd=levelInWorld(level)===2;
+
+  if(isLastLevel){
     state='win';
     document.getElementById('winStat').innerHTML=`total climb <b>${totalAlt} m</b> &nbsp;·&nbsp; lifetime <b>${save.lifetimeAlt} m</b>`;
-    const winApod=document.getElementById('winApod');
-    const winImg=document.getElementById('winApodImg');
-    const winTitle=document.getElementById('winApodTitle');
-    if(apodImg&&apodMeta){
-      winImg.src=apodImg.src;winTitle.textContent=apodMeta.title||'';
-      winApod.classList.remove('hidden');
-    } else { winApod.classList.add('hidden'); }
+    const wab=document.getElementById('winApodBtn');
+    wab.classList.toggle('hidden',!hasApod);
+    if(hasApod)wab.textContent=`🔭 ${apodMeta.title||"Today's NASA Picture of the Universe"}`;
     show('winScreen');
+  } else if(isWorldEnd){
+    state='clear';
+    const w=levelWorld(level);
+    const world=WORLDS[w];
+    document.getElementById('wcEyebrow').textContent=`World ${w+1} complete`;
+    document.getElementById('wcTitle').innerHTML=`WORLD ${w+1}<br>CLEARED`;
+    document.getElementById('wcTitle').style.color=world.accent;
+    document.getElementById('wcStat').innerHTML=`${world.icon} <b>${world.name}</b> &nbsp;·&nbsp; altitude <b>${gained} m</b>`;
+    document.getElementById('wcNextNum').textContent=w+2;
+    const wcab=document.getElementById('wcApodBtn');
+    wcab.classList.toggle('hidden',!hasApod);
+    if(hasApod)wcab.textContent=`🔭 ${apodMeta.title||'Check this out — NASA APOD'}`;
+    show('worldClearScreen');
   } else {
     state='clear';
-    document.getElementById('clearTitle').textContent=`LEVEL ${level+1} CLEAR`;
+    document.getElementById('clearTitle').textContent=`LEVEL ${levelLabel(level)} CLEAR`;
     document.getElementById('clearStat').innerHTML=`altitude <b>${gained} m</b>`;
-    const clearApod=document.getElementById('clearApod');
-    const cImg=document.getElementById('clearApodImg');
-    const cTitle=document.getElementById('clearApodTitle');
-    const cDate=document.getElementById('clearApodDate');
-    if(apodImg&&apodMeta){
-      cImg.src=apodImg.src;
-      cTitle.textContent=apodMeta.title||'';
-      cDate.textContent=apodMeta.date||'';
-      clearApod.classList.remove('hidden');
-    } else { clearApod.classList.add('hidden'); }
+    const cab=document.getElementById('clearApodBtn');
+    cab.classList.toggle('hidden',!hasApod);
+    if(hasApod)cab.textContent=`🔭 ${apodMeta.title||'Check this out — NASA APOD'}`;
     show('clearScreen');
   }
 }
@@ -1620,7 +1778,6 @@ const $=id=>document.getElementById(id);
 
 $('startBtn').onclick=async()=>{
   sndClick();totalAlt=0;lifetimeGain=0;
-  if(!('ontouchstart' in window))requestFS();
   if(settings.controls==='tilt')await enableTilt();
   openIntro(0);
 };
@@ -1666,7 +1823,7 @@ document.getElementById('keyBindSection').addEventListener('pointerup',e=>{
 // init key labels on page load
 updateKeyUI();
 
-$('introGo').onclick=()=>{sndClick();startLevel(level);};
+$('introGo').onclick=()=>{sndClick();startLevel(level)};
 $('pauseBtn').onclick=()=>{if(state==='playing')pauseGame();};
 $('resumeBtn').onclick=()=>{show(null);setState('playing');};
 $('pauseMenuBtn').onclick=()=>{state='menu';$('hud').classList.remove('show');show('menuScreen');};
@@ -1677,15 +1834,32 @@ $('clearMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
 $('againBtn').onclick=()=>{totalAlt=0;lifetimeGain=0;openIntro(0);};
 $('winMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
 $('sunBackBtn').onclick=()=>{state='menu';show('menuScreen');};
+$('wcNextBtn').onclick=()=>{sndClick();openIntro(level+1);};
+$('wcMenuBtn').onclick=()=>{state='menu';show('menuScreen');};
+$('clearApodBtn').onclick=()=>openApodModal(level);
+$('wcApodBtn').onclick=()=>openApodModal(level);
+$('winApodBtn').onclick=()=>openApodModal(level);
 $('howToBtn').onclick=()=>{show('howToScreen');};
 $('howToBack').onclick=()=>{show('settingsScreen');};
 $('lvlSelBtn').onclick=()=>{sndClick();state='levelselect';buildLevelGrid();show('levelSelectScreen');};
 $('lvlSelBack').onclick=()=>{sndClick();state='menu';show('menuScreen');};
 // fullscreen desktop-only — no button on mobile
+$('fullscreenBtn').onclick=toggleFS;
 document.addEventListener('dblclick',e=>{ if(!('ontouchstart' in window))toggleFS(); });
 
 // Show golden status in settings if earned
 if(save.golden)$('goldenStatus').style.display='block';
+
+// Music: start on first interaction (browser requires gesture for AudioContext)
+let musicStarted=false;
+function tryStartMusic(){
+  if(!musicStarted&&settings.sound){musicStarted=true;startMusic();}
+}
+document.addEventListener('pointerdown',tryStartMusic,{once:true});
+document.addEventListener('keydown',tryStartMusic,{once:true});
+
+// Stop music when game starts, restart when returning to menu
+const _origStartLevel=startLevel;
 </script>
 </body>
 </html>
