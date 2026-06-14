@@ -214,7 +214,7 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 <div class="overlay" id="menuScreen">
   <div class="eyebrow">Nobody Studios presents</div>
   <h1 id="mainTitle"></h1>
-  <p class="sub" id="menuSub">Five worlds. Fifteen levels. Low orbit to the edge of everything. Shoot debris, dodge what you can't, reach each checkpoint.</p>
+  <p class="sub" id="menuSub">Seven worlds. Twenty-one levels. Low orbit to the Cosmic Rift. Find power-ups or get left behind.</p>
   <button class="btn accent" id="startBtn" style="min-width:260px">New Game</button>
   <div style="display:flex;gap:10px;width:min(260px,80vw)">
     <button class="btn ghost" id="lvlSelBtn" style="flex:1;min-width:0;font-size:14px;padding:13px 10px">Level Select</button>
@@ -241,6 +241,14 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
       <button data-on="0">Off</button>
     </div>
   </div>
+  <div class="setting">
+    <span>Power-Ups</span>
+    <div class="seg" id="pupSeg">
+      <button data-on="1" class="on">On</button>
+      <button data-on="0">Off</button>
+    </div>
+  </div>
+  <p class="note" style="margin-top:-6px">Off = classic mode. On = beta power-ups (shield, jetpack, freeze, magnet).</p>
   <p class="note">Tap: hold left/right half to steer, tap the ▲ button to shoot. Tilt: lean to steer, ▲ to shoot. WASD + Space/↑ on desktop.</p>
   <div id="keyBindSection" class="desktop-only" style="width:min(320px,86vw);margin-top:4px">
     <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:8px">Desktop Key Bindings</div>
@@ -279,6 +287,10 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
     <div class="htp-row"><span class="htp-icon">🛰️</span><div><b>Satellites &amp; asteroids</b> — shoot or dodge. Contact = fail.</div></div>
     <div class="htp-row"><span class="htp-icon">⚫</span><div><b>Black holes</b> — gravity pulls you in. Can't be shot. Route around them.</div></div>
     <div class="htp-row"><span class="htp-icon">🌀</span><div><b>Wormholes</b> — enter to teleport upward. Useful shortcut.</div></div>
+    <div class="htp-row"><span class="htp-icon">🛡️</span><div><b>Shield</b> — cyan orb pickup. Absorbs one hazard hit. Glows around you when active.</div></div>
+    <div class="htp-row"><span class="htp-icon">🚀</span><div><b>Jetpack</b> — orange pickup. Your next platform bounce launches extra high. One use.</div></div>
+    <div class="htp-row"><span class="htp-icon">❄️</span><div><b>Freeze</b> — blue pickup. Freezes all hazards in place for a few seconds.</div></div>
+    <div class="htp-row"><span class="htp-icon">🧲</span><div><b>Magnet</b> — green pickup. Expands your landing zone on platforms temporarily.</div></div>
     <div class="htp-row"><span class="htp-icon">🏁</span><div><b>Gold checkpoint</b> — land on it to clear the level.</div></div>
   </div>
   <button class="btn" id="howToBack">Got it</button>
@@ -338,7 +350,7 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
   <div class="eyebrow">You made it</div>
   <h2>ESCAPE<br>VELOCITY</h2>
   <button class="btn ghost apod-cta hidden" id="winApodBtn" style="min-width:0;font-size:12px;padding:10px 18px;color:var(--amber);border-color:rgba(255,179,64,.4)">🔭 Today's NASA Picture of the Universe</button>
-  <p class="sub">Five worlds. Fifteen levels. The void is behind you. Nobody saw you do it. Trust Nobody.</p>
+  <p class="sub">Seven worlds. Twenty-one levels. The rift is behind you. Nobody saw you do it. Trust Nobody.</p>
   <div class="stat" id="winStat"></div>
   <button class="btn accent" id="againBtn">Play Again</button>
   <button class="btn ghost" id="winMenuBtn">Main Menu</button>
@@ -392,7 +404,7 @@ h2{font-family:var(--display);font-size:clamp(22px,6vw,34px);letter-spacing:.08e
 
 /* ── Inline Service Worker via Blob ── */
 const SW_SRC = `
-const CACHE='ev-v3';
+const CACHE='ev-v4';
 const PRECACHE=['/'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE)).then(()=>self.skipWaiting()));
@@ -515,6 +527,24 @@ const WORLDS=[
        desc:'This is the end of the map. Everything bends.'},
     ]
   },
+  {
+    num:6,name:'NEBULA DRIFT',subtitle:'Colors that kill',
+    tint:'#1a0a2e',accent:'#ff88ff',icon:'🌸',
+    levels:[
+      {name:'Hydrogen Cloud',  mechanic:'normal',       goal:6400,gap:[84,112],moving:0.24,brittle:0.18,spring:0.08,tint:'#1a0a2e',star:'#ff88ff',hazard:0.10,hazType:'asteroid',bh:0.02,pup:0.12,pupTypes:['shield','magnet'],    desc:'Nebula entry. Power-ups debut here.'},
+      {name:'Plasma Surge',    mechanic:'heavy-grav',   goal:7000,gap:[72,98], moving:0.28,brittle:0.22,spring:0.14,tint:'#200a38',star:'#ffaaff',hazard:0.14,hazType:'asteroid',bh:0.04,pup:0.15,pupTypes:['shield','jetpack'],   desc:'Heavy pull. Jetpacks help. Use them.'},
+      {name:'Chromatic Reef',  mechanic:'ring-bands',   goal:7600,gap:[80,110],moving:0.30,brittle:0.24,spring:0.08,tint:'#180830',star:'#cc88ff',hazard:0.14,hazType:'asteroid',bh:0.05,pup:0.16,pupTypes:['shield','freeze','magnet'],desc:'Ring bands thicker than Saturn. Power-ups are the edge.'},
+    ]
+  },
+  {
+    num:7,name:'COSMIC RIFT',subtitle:'End of maps. No way back.',
+    tint:'#00050a',accent:'#00ffcc',icon:'⚡',
+    levels:[
+      {name:'Dark Energy',     mechanic:'ghost',        goal:7600,gap:[86,116],moving:0.30,brittle:0.26,spring:0.07,tint:'#020a10',star:'#00ffcc',hazard:0.16,hazType:'asteroid',bh:0.07,pup:0.18,pupTypes:['shield','freeze','magnet'],    desc:'Ghost platforms vanish faster. Power-ups everywhere.'},
+      {name:'Quantum Flux',    mechanic:'wormhole',     goal:8200,gap:[88,118],moving:0.32,brittle:0.28,spring:0.06,tint:'#000810',star:'#44ffdd',hazard:0.14,hazType:'asteroid',bh:0.09,pup:0.20,pupTypes:['shield','jetpack','freeze','magnet'],desc:'Wormholes, black holes, power-ups. Everything at once.'},
+      {name:'The Final Rift',  mechanic:'event-horizon',goal:9000,gap:[90,118],moving:0.34,brittle:0.30,spring:0.06,tint:'#000508',star:'#00ffcc',hazard:0.12,hazType:'asteroid',bh:0.11,pup:0.22,pupTypes:['shield','jetpack','freeze','magnet'],desc:"This is it. The map ends here. Don't look back."},
+    ]
+  },
 ];
 
 // Flat array for all game logic
@@ -590,7 +620,7 @@ const eggs={
 };
 
 /* ── Settings ── */
-const settings={controls:'tap',sound:true,keys:{left:'ArrowLeft',right:'ArrowRight',shoot:'Space'}};
+const settings={controls:'tap',sound:true,powerups:true,keys:{left:'ArrowLeft',right:'ArrowRight',shoot:'Space'}};
 const KEY_LABELS={'ArrowLeft':'← Left','ArrowRight':'→ Right','ArrowUp':'↑ Up','ArrowDown':'↓ Down',
   'Space':'Space','KeyW':'W','KeyA':'A','KeyS':'S','KeyD':'D','KeyZ':'Z','KeyX':'X',
   'ShiftLeft':'L-Shift','ShiftRight':'R-Shift','ControlLeft':'L-Ctrl','KeyF':'F','KeyG':'G',
@@ -738,6 +768,22 @@ function sndClear(){
 function sndClick(){
   if(!settings.sound)return;
   beep(640,0.04,'square',0.025);
+}
+
+function sndPowerup() {
+  if (!settings.sound) return;
+  [880, 1100, 1320, 1760].forEach((f, i) => setTimeout(() => beep(f, 0.08, 'sine', 0.06), i * 55));
+}
+
+function sndShieldHit() {
+  if (!settings.sound) return;
+  try {
+    const ac = getAC(), t = ac.currentTime;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(600, t); o.frequency.exponentialRampToValueAtTime(300, t + 0.15);
+    g.gain.setValueAtTime(0.1, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.2);
+  } catch(e) {}
 }
 
 function r2d2Beep(){
@@ -1015,6 +1061,7 @@ let state='menu';
 let level=0;
 let player,platforms,particles,cam,maxAlt,finishPad,levelDone;
 let hazards=[],bullets=[],shootCd=0;
+let powerups=[];
 let ringBands=[];             // Saturn ring-band hazards
 let wormholes=[];             // wormhole pads
 let ghostTimer=0;             // ghost platform pulse
@@ -1049,7 +1096,7 @@ function spawnPlatform(y,cfg){
   const ghost=cfg.mechanic==='ghost'&&type==='solid'&&_consecutiveNonSolid===0&&Math.random()<0.40;
 
   return{x:rand(10,W-80),y,w:68,h:14,type,
-    vx:type==='moving'?(Math.random()<.5?-1:1)*rand(1,1.8):0,
+    vx:type==='moving'?(Math.random()<.5?-1:1)*rand(1.2,2.0):0,
     spring:Math.random()<cfg.spring,broken:false,ghost,
     ghostPhase:Math.random()*Math.PI*2,ghostVis:1};
 }
@@ -1077,7 +1124,7 @@ function spawnWormhole(y){
 
 function shoot(){
   if(state!=='playing'||shootCd>0)return;
-  shootCd=14;
+  shootCd=12;
   if(eggs.buzzActive)buzzLaser();else sndShoot();
   bullets.push({x:player.x+16,y:player.y-4,vy:-11,buzz:eggs.buzzActive});
 }
@@ -1086,7 +1133,7 @@ function shoot(){
 function startLevel(n){
   level=n;
   const cfg=LEVELS[n];
-  platforms=[];particles=[];hazards=[];bullets=[];ringBands=[];wormholes=[];
+  platforms=[];particles=[];hazards=[];bullets=[];ringBands=[];wormholes=[];powerups=[];
   shootCd=0;ghostTimer=0;sunMeltTimer=0;_consecutiveNonSolid=0;
 
   // gravity mod
@@ -1107,16 +1154,20 @@ function startLevel(n){
   }
   // Resume random generation above the ladder, no hazards until 500px up
   while(y>-H*1.5){
-    const _initGap=Math.min(cfg.gap[1],105);
+    const _initGap=Math.min(cfg.gap[1],108);
     y-=rand(cfg.gap[0],_initGap);
-    platforms.push(spawnPlatform(y,cfg));
+    const plt=spawnPlatform(y,cfg);
+    platforms.push(plt);
     if(y<H-500)spawnHazard(y,cfg);
     if(cfg.mechanic==='wormhole'&&Math.random()<0.09)spawnWormhole(y-40);
+    if(settings.powerups && cfg.pupTypes && cfg.pup && Math.random()<cfg.pup)
+      powerups.push({x:plt.x+plt.w/2+rand(-10,10),y:plt.y-28,type:cfg.pupTypes[Math.floor(Math.random()*cfg.pupTypes.length)],r:14,rot:0,collected:false});
   }
 
   if(cfg.mechanic==='ring-bands')spawnRingBands();
 
   player={x:W/2-16,y:H-90,w:32,h:38,vx:0,vy:-13.2,face:1};
+  player.shield = false; player.jetpack = 0; player.freeze = 0; player.magnet = 0;
   cam=0;maxAlt=0;levelDone=false;finishPad=null;
 
   document.getElementById('lvlTag').textContent=`W${levelWorld(n)+1}-${levelInWorld(n)+1}`;
@@ -1150,13 +1201,13 @@ function openSunLevel(){
 }
 
 /* ── Physics ── */
-const BASE_GRAV=0.38,JUMP=-13.2,SPRING_V=-20,MOVE=0.55,MAXVX=6.2;
+const BASE_GRAV=0.38,JUMP=-13.2,SPRING_V=-20,MOVE=0.55,MAXVX=6.5;
 
 function update(){
   if(level===99){updateSun();return;}
   const cfg=LEVELS[level];
   const grav=BASE_GRAV*gravMult;
-  const jumpV=cfg.mechanic==='low-grav'?JUMP*0.85:JUMP;
+  const jumpV=cfg.mechanic==='low-grav'?JUMP*0.82:JUMP;
   const springV=cfg.mechanic==='heavy-grav'?SPRING_V*1.2:SPRING_V;
 
   // steer
@@ -1177,7 +1228,7 @@ function update(){
   ghostTimer++;
   for(const p of platforms){
     if(!p.ghost)continue;
-    p.ghostVis=0.5+0.5*Math.sin(ghostTimer*0.05+p.ghostPhase);
+    p.ghostVis=0.5+0.5*Math.sin(ghostTimer*0.055+p.ghostPhase);
     p.ghostSolid=p.ghostVis>0.5;
   }
 
@@ -1187,12 +1238,20 @@ function update(){
     for(const p of platforms){
       if(p.broken)continue;
       if(p.ghost&&!p.ghostSolid)continue;
-      if(player.x+player.w*0.7>p.x&&player.x+player.w*0.3<p.x+p.w&&feet>p.y&&feet<p.y+p.h+player.vy){
+      const magnetBonus = player.magnet > 0 ? 16 : 0;
+      if(player.x+player.w*0.7+magnetBonus>p.x&&player.x+player.w*0.3-magnetBonus<p.x+p.w&&feet>p.y&&feet<p.y+p.h+player.vy){
         if(p.type==='brittle'){p.broken=true;sndBreak();jet(p.x+p.w/2,p.y,'#888');continue;}
         player.y=p.y-player.h;
-        player.vy=p.spring?springV:jumpV;
-        if(p.spring)sndSpring();else sndJump();
-        jet(player.x+player.w/2,player.y+player.h,p.spring?'#ffb340':'#5ce8ff');
+        if (player.jetpack > 0 && !p.spring) {
+          player.vy = SPRING_V * 1.5;
+          player.jetpack = 0;
+          sndSpring();
+          jet(player.x+player.w/2, player.y+player.h, '#ffb340');
+        } else {
+          player.vy=p.spring?springV:jumpV;
+          if(p.spring)sndSpring();else sndJump();
+          jet(player.x+player.w/2,player.y+player.h,p.spring?'#ffb340':'#5ce8ff');
+        }
         if(p===finishPad){completeLevel();return;}
       }
     }
@@ -1231,8 +1290,29 @@ function update(){
     }
   }
 
+  // power-up collection
+  if (settings.powerups) {
+    for (const pu of powerups) {
+      if (pu.collected) continue;
+      pu.rot += 0.03;
+      const dx = player.x + 16 - pu.x, dy = player.y + 19 - pu.y;
+      if (Math.hypot(dx, dy) < pu.r + 14) {
+        pu.collected = true;
+        sndPowerup();
+        if (pu.type === 'shield') { player.shield = true; toast('🛡 Shield active!', 1800); }
+        if (pu.type === 'jetpack') { player.jetpack = 600; toast('🚀 Jetpack ready — next jump launches!', 2000); }
+        if (pu.type === 'freeze') { player.freeze = 240; toast('❄ Hazards frozen!', 1800); }
+        if (pu.type === 'magnet') { player.magnet = 360; toast('🧲 Magnet active — wider landings!', 2000); }
+      }
+    }
+    powerups = powerups.filter(pu => !pu.collected && pu.y < H + 80);
+  }
+
   // hazards
   if(shootCd>0)shootCd--;
+  if (player.freeze > 0) player.freeze--;
+  if (player.magnet > 0) player.magnet--;
+  if (player.jetpack > 0) player.jetpack--;
   const pcx=player.x+16,pcy=player.y+19;
   for(const h of hazards){
     if(h.type==='blackhole'){
@@ -1240,9 +1320,11 @@ function update(){
       if(d<h.pull){const f=(1-d/h.pull);player.vx+=dx/d*f*0.9;player.vy+=dy/d*f*0.5;}
       if(d<h.r+10){failGame();return;}
     } else {
-      h.x+=h.vx;h.rot+=0.03*Math.sign(h.vx||1);
+      if (player.freeze <= 0) { h.x+=h.vx;h.rot+=0.03*Math.sign(h.vx||1); }
       if(h.x<h.r||h.x>W-h.r)h.vx*=-1;
-      if(Math.abs(h.x-pcx)<h.r+12&&Math.abs(h.y-pcy)<h.r+14){failGame();return;}
+      if(Math.abs(h.x-pcx)<h.r+12&&Math.abs(h.y-pcy)<h.r+14){
+        if(player.shield){player.shield=false;sndShieldHit();}else{failGame();return;}
+      }
     }
   }
 
@@ -1270,6 +1352,8 @@ function update(){
     for(const h of hazards)h.y+=lift;
     for(const b of bullets)b.y+=lift;
     for(const w of wormholes)w.y+=lift;
+    for(const pu of powerups)pu.y+=lift;
+
     for(const rb of ringBands){}; // ring bands are viewport-relative, skip
     cam+=lift;
     maxAlt=Math.max(maxAlt,cam);
@@ -1278,7 +1362,7 @@ function update(){
   // spawn ahead — use ALL platform positions (including broken) so gaps don't stack
   let topY=platforms.length?Math.min(...platforms.map(p=>p.y)):H*0.4;
   while(topY>-300){
-    const _maxGap=Math.min(cfg.gap[1],105); // never wider than jump can reliably cross
+    const _maxGap=Math.min(cfg.gap[1],108); // never wider than jump can reliably cross
     topY-=rand(cfg.gap[0],_maxGap);
     const altHere=maxAlt+(H*0.42-topY);
     if(altHere>=cfg.goal&&!finishPad){
@@ -1291,6 +1375,10 @@ function update(){
       platforms.push(spawnPlatform(topY,cfg));
       spawnHazard(topY,cfg);
       if((cfg.mechanic==='wormhole')&&Math.random()<0.09)spawnWormhole(topY-40);
+      if(settings.powerups && cfg.pupTypes && cfg.pup && Math.random()<cfg.pup*0.6){
+        const plt=platforms[platforms.length-1];
+        powerups.push({x:plt.x+plt.w/2+rand(-10,10),y:topY-28,type:cfg.pupTypes[Math.floor(Math.random()*cfg.pupTypes.length)],r:14,rot:0,collected:false});
+      }
     }
   }
   platforms=platforms.filter(p=>p.y<H+120&&!(p.broken&&p.y>H));
@@ -1432,6 +1520,39 @@ function draw(){
     if(p.ghost)ctx.globalAlpha=1;
   }
 
+  // magnet platform highlight
+  if (player.magnet > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.fillStyle = '#44ff88';
+    for (const p of platforms) {
+      if (p.broken || p.type === 'finish') continue;
+      ctx.fillRect(p.x - 16, p.y, p.w + 32, p.h);
+    }
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  // power-ups
+  for (const pu of powerups) {
+    if (pu.collected) continue;
+    ctx.save();
+    ctx.translate(pu.x, pu.y);
+    const color = {shield:'#5ce8ff',jetpack:'#ffb340',freeze:'#88ddff',magnet:'#44ff88'}[pu.type];
+    const t2 = performance.now()/600;
+    ctx.globalAlpha = 0.25 + 0.15*Math.sin(t2 + pu.rot);
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(0, 0, pu.r + 5 + 3*Math.sin(t2), 0, Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = 0.7;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(0, 0, pu.r, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = '#0b0e1a';
+    ctx.font = '12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText({shield:'🛡',jetpack:'🚀',freeze:'❄',magnet:'🧲'}[pu.type], 0, 0);
+    ctx.restore();
+  }
+
   // hazards
   for(const h of hazards){
     if(h.type==='blackhole'){
@@ -1448,6 +1569,54 @@ function draw(){
         ctx.fillStyle='#5ce8ff';ctx.fillRect(-24,-4,15,8);ctx.fillRect(9,-4,15,8);
         ctx.fillStyle='#eef1ff';ctx.fillRect(-8,-8,16,16);
         ctx.fillStyle='#ff5c7a';ctx.fillRect(-2,-11,4,3);
+
+  // power-up pickups
+  if(settings.powerups){
+    const PUP_COLORS={shield:'#5ce8ff',jetpack:'#ffb340',freeze:'#88ddff',magnet:'#44ff88'};
+    const PUP_ICONS={shield:'🛡',jetpack:'🚀',freeze:'❄',magnet:'🧲'};
+    for(const pu of powerups){
+      if(pu.collected)continue;
+      ctx.save();ctx.translate(pu.x,pu.y);
+      const pc=PUP_COLORS[pu.type];
+      const tp2=performance.now()/600;
+      ctx.globalAlpha=0.28+0.14*Math.sin(tp2+pu.rot);
+      ctx.strokeStyle=pc;ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(0,0,pu.r+5+3*Math.sin(tp2),0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=0.7;ctx.fillStyle=pc;
+      ctx.beginPath();ctx.arc(0,0,pu.r,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle='#0b0e1a';
+      ctx.font='12px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(PUP_ICONS[pu.type],0,0);
+      ctx.restore();
+    }
+  }
+  // shield aura around player
+  if(player.shield){
+    ctx.save();
+    ctx.globalAlpha=0.4+0.2*Math.sin(performance.now()/200);
+    ctx.strokeStyle='#5ce8ff';ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(player.x+16,player.y+19,28,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=0.08;ctx.fillStyle='#5ce8ff';
+    ctx.beginPath();ctx.arc(player.x+16,player.y+19,28,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  // magnet glow on platforms
+  if(player.magnet>0){
+    ctx.save();ctx.globalAlpha=0.14;ctx.fillStyle='#44ff88';
+    for(const p of platforms){
+      if(!p.broken&&p.type!=='finish')ctx.fillRect(p.x-16,p.y,p.w+32,p.h);
+    }
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  // active power-up HUD icons (bottom-left)
+  {
+    let hx=14,hy=H-38;
+    ctx.font='18px sans-serif';ctx.textBaseline='alphabetic';
+    if(player.shield){ctx.fillText('🛡',hx,hy);hx+=26;}
+    if(player.jetpack>0){ctx.fillText('🚀',hx,hy);hx+=26;}
+    if(player.freeze>0){ctx.fillText('❄',hx,hy);hx+=26;}
+    if(player.magnet>0){ctx.fillText('🧲',hx,hy);}
+  }
       }
       ctx.restore();
     } else {
@@ -1739,7 +1908,7 @@ function completeLevel(){
   document.getElementById('hud').classList.remove('show');
   const apodMeta=apod.meta[level];
   const hasApod=!!(apodMeta&&(apodMeta.url||apodMeta.thumbnail_url));
-  const isLastLevel=level===14;
+  const isLastLevel=level===20;
   const isWorldEnd=levelInWorld(level)===2;
 
   if(isLastLevel){
@@ -1800,6 +1969,11 @@ $('controlSeg').addEventListener('pointerup',async e=>{
 $('soundSeg').addEventListener('pointerup',e=>{
   const b=e.target.closest('button');if(!b)return;
   settings.sound=b.dataset.on==='1';
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
+});
+$('pupSeg').addEventListener('pointerup',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  settings.powerups=b.dataset.on==='1';
   [...e.currentTarget.children].forEach(c=>c.classList.toggle('on',c===b));
 });
 
