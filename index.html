@@ -1650,6 +1650,63 @@ function draw(){
   }
   ctx.globalAlpha=1;
 
+
+  // power-up pickups
+  if(settings.powerups){
+    const PUP_COLORS={shield:'#5ce8ff',jetpack:'#ffb340',freeze:'#88ddff',magnet:'#44ff88'};
+    const PUP_ICONS={shield:'\u{1F6E1}',jetpack:'\u{1F680}',freeze:'\u2744',magnet:'\u{1F9F2}'};
+    for(const pu of powerups){
+      if(pu.collected)continue;
+      ctx.save();ctx.translate(pu.x,pu.y);
+      const pc=PUP_COLORS[pu.type];
+      const tp2=performance.now()/600;
+      ctx.globalAlpha=0.28+0.14*Math.sin(tp2+pu.rot);
+      ctx.strokeStyle=pc;ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(0,0,pu.r+5+3*Math.sin(tp2),0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=0.7;ctx.fillStyle=pc;
+      ctx.beginPath();ctx.arc(0,0,pu.r,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle='#0b0e1a';
+      ctx.font='12px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(PUP_ICONS[pu.type],0,0);
+      ctx.restore();
+    }
+  }
+  // shield aura around player
+  if(player.shield){
+    ctx.save();
+    ctx.globalAlpha=0.4+0.2*Math.sin(performance.now()/200);
+    ctx.strokeStyle='#5ce8ff';ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(player.x+16,player.y+19,28,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=0.08;ctx.fillStyle='#5ce8ff';
+    ctx.beginPath();ctx.arc(player.x+16,player.y+19,28,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  // magnet glow on platforms
+  if(player.magnet>0){
+    ctx.save();ctx.globalAlpha=0.14;ctx.fillStyle='#44ff88';
+    for(const p of platforms){
+      if(!p.broken&&p.type!=='finish')ctx.fillRect(p.x-16,p.y,p.w+32,p.h);
+    }
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  // freeze overlay on hazards
+  if(player.freeze>0){
+    ctx.save();ctx.globalAlpha=0.38;ctx.fillStyle='#88ddff';
+    for(const h of hazards){
+      if(h.type!=='blackhole')ctx.beginPath(),ctx.arc(h.x,h.y,h.r+4,0,Math.PI*2),ctx.fill();
+    }
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  // active power-up HUD icons (bottom-left)
+  {
+    let hx=14,hy=H-38;
+    ctx.font='18px sans-serif';ctx.textBaseline='alphabetic';
+    if(player.shield){ctx.fillText('\u{1F6E1}',hx,hy);hx+=26;}
+    if(player.jetpack>0){ctx.fillText('\u{1F680}',hx,hy);hx+=26;}
+    if(player.freeze>0){ctx.fillText('\u2744',hx,hy);hx+=26;}
+    if(player.magnet>0){ctx.fillText('\u{1F9F2}',hx,hy);}
+  }
+
   drawAstronaut(player.x,player.y,player.face,player.vy);
 }
 
